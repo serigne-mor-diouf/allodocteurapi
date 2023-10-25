@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "medecindossier")
 public class MedecinDossier {
-// serev une cles patager
+// sert a dire que c'est  une cles patager
     @EmbeddedId
     private  MedecinDossierPk  medecinDossierPk ;
 
@@ -41,11 +41,9 @@ public class MedecinDossier {
         this.motif = motif;
     }
 
-
     public List<String> getAntecedent() {
         return antecedent;
     }
-
 
     public void setAntecedent(List<String> antecedent) {
         this.antecedent = antecedent;
@@ -56,12 +54,8 @@ public class MedecinDossier {
         return allergie;
     }
 
-
     public void setAllergie(List<String> allergie) {
         this.allergie = allergie;
     }
-
-
-
 
 }

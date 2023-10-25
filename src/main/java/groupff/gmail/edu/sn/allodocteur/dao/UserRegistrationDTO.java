@@ -41,7 +41,7 @@ public class UserRegistrationDTO {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre")
     private String password;
 
-       @Column(columnDefinition = "VARCHAR(255) DEFAULT '1' CHECK (statut IN ('0', '1'))")
+       @Column(columnDefinition = "VARCHAR(255) DEFAULT '1' CHECK (statut IN ('1', '0'))")
     private String statut;
 
     public UserRegistrationDTO(){
@@ -125,7 +125,6 @@ public class UserRegistrationDTO {
     public void updateData( Utilisateur utilisateur){
         //cripter le mot de passe
           String hashedPassword = BCrypt.hashpw(this.getPassword(), BCrypt.gensalt());
-
         // Créez un objet utilisateur
         utilisateur.setNom(this.getNom());
         utilisateur.setPrenom(this.getPrenom());

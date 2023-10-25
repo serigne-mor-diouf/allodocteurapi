@@ -1,5 +1,7 @@
 package groupff.gmail.edu.sn.allodocteur.entites;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -7,39 +9,43 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "prescription")
 public class Prescription {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id ;
+   
+    @EmbeddedId
+    private  PrescriptionPK  prescriptionPK ;
+    private Date date;
 
-    private  List<String> nomMedicament ;
+    private Time heure;
+   
+    private  List<String> medicament ;
+
     private String description  ;
-    @ManyToOne
-    @JoinColumn(name = "medecin_id")
-    private Medecin medecin;
-
-    @ManyToOne
-    @JoinColumn(name = "patient_id")
-    private Patient patient;
+    
 
  //constructeur
-
+ 
     public Prescription() {
 
     }
 
-    public Prescription(List<String> nomMedicament, String description, Medecin medecin, Patient patient) {
-        this.nomMedicament = nomMedicament;
-        this.description = description;
-        this.medecin = medecin;
-        this.patient = patient;
+    
+
+
+    public PrescriptionPK getPrescriptionPK() {
+        return prescriptionPK;
     }
 
-    public Long getId() {
-        return id;
+
+    public void setPrescriptionPK(PrescriptionPK prescriptionPK) {
+        this.prescriptionPK = prescriptionPK;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public List<String> getMedicament() {
+        return medicament;
+    }
+
+
+    public void setMedicament(List<String> medicament) {
+        this.medicament = medicament;
     }
 
 
@@ -47,31 +53,26 @@ public class Prescription {
         return description;
     }
 
+
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public Medecin getMedecin() {
-        return medecin;
+
+     public Time getHeure() {
+        return heure;
     }
 
-    public void setMedecin(Medecin medecin) {
-        this.medecin = medecin;
+
+    public void setHeure(Time heure) {
+        this.heure = heure;
     }
 
-    public Patient getPatient() {
-        return patient;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
-    public List<String> getNomMedicament() {
-        return nomMedicament;
-    }
-
-    public void setNomMedicament(List<String> nomMedicament) {
-        this.nomMedicament = nomMedicament;
+    public Date getDate() {
+        return date;
     }
 }

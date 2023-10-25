@@ -1,82 +1,83 @@
-package groupff.gmail.edu.sn.allodocteur.entites;
+    package groupff.gmail.edu.sn.allodocteur.entites;
 
-import jakarta.persistence.*;
+    import jakarta.persistence.*;
 
-import java.util.Date;
-import java.util.List;
+    import java.util.Date;
+    import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+    import com.fasterxml.jackson.annotation.JsonIgnore;
 
     @Entity
     @Table(name = "dossiermedicale")
     public class DossiersMedicale{
         @Id
         @GeneratedValue (strategy = GenerationType.IDENTITY)
-        private Long id;
+        private Long numero;
 
         // Autres attributs
-        private String allergi ;
-        private String traitement ;
+        private List<String>allergi ;
+        private List<String> antecedent ;
         private Date date ;
 
-       
         @OneToOne
         @JoinColumn(name = "patient_id")
         private Patient patient;
-
-
-       
+/////////////////////////////////////////////////////////////////////////
         @JsonIgnore
         @OneToMany(mappedBy = "medecinDossierPk.dossiermedicale")
         private List<MedecinDossier> medecinDossiers;
-
 
         public DossiersMedicale(){
 
         }
 
-
-// Getters et setters
-
-
-       
-
-
-        public Long getId() {
-            return id;
-        }
-
-        public DossiersMedicale( String allergi, String traitement, Date date, Patient patient,
-                List<MedecinDossier> medecinDossiers) {
-           
+        public DossiersMedicale(List<String> allergi, List<String> traitement, Date date, Patient patient,
+            List<MedecinDossier> medecinDossiers) {
             this.allergi = allergi;
-            this.traitement = traitement;
+            this.antecedent = traitement;
             this.date = date;
             this.patient = patient;
             this.medecinDossiers = medecinDossiers;
         }
 
 
-        public void setId(Long id) {
-            this.id = id;
+        public void setNumero(Long numero) {
+            this.numero = numero;
         }
 
-        public String getAllergi() {
+        
+        public Long getNumero() {
+            return numero;
+        }
+
+        public List<String> getAllergi() {
             return allergi;
         }
 
-        public void setAllergi(String allergi) {
+
+        public void setAllergi(List<String> allergi) {
             this.allergi = allergi;
         }
 
-        public String getTraitement() {
-            return traitement;
+
+       public List<String> getAntecedent() {
+           return antecedent;
+       }
+
+       public void setAntecedent(List<String> antecedent) {
+           this.antecedent = antecedent;
+       }
+
+
+        public List<MedecinDossier> getMedecinDossiers() {
+            return medecinDossiers;
         }
 
-        public void setTraitement(String traitement) {
-            this.traitement = traitement;
+
+        public void setMedecinDossiers(List<MedecinDossier> medecinDossiers) {
+            this.medecinDossiers = medecinDossiers;
         }
+
 
         public Date getDate() {
             return date;

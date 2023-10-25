@@ -2,8 +2,8 @@ package groupff.gmail.edu.sn.allodocteur.entites;
 
 import jakarta.persistence.*;
 
+import java.sql.Time;
 import java.util.Date;
-
 
 @Entity
 @Table(name = "rendezvous")
@@ -14,7 +14,7 @@ public class RendezVous {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
-    private String lieu ;
+    private Time heure ;
     private String statut ;
 
     // Relation avec le patient
@@ -28,24 +28,19 @@ public class RendezVous {
     private Medecin medecin;
     // Constructeurs,
 
-    
-
     public RendezVous(){
 
     }
-
-
     // getters, setters
 
-    public RendezVous( Date date, String lieu, String statut, Patient patient, Medecin medecin) {
+    public RendezVous( Date date, Time heure, String statut, Patient patient, Medecin medecin) {
         
         this.date = date;
-        this.lieu = lieu;
+        this.heure = heure ;
         this.statut = statut;
         this.patient = patient;
         this.medecin = medecin;
     }
-
 
     public Long getId() {
         return id;
@@ -63,12 +58,12 @@ public class RendezVous {
         this.date = date;
     }
 
-    public String getLieu() {
-        return lieu;
+    public Time getHeure() {
+        return heure;
     }
 
-    public void setLieu(String lieu) {
-        this.lieu = lieu;
+    public void setHeure(Time heure) {
+        this.heure = heure;
     }
 
     public String getStatut() {

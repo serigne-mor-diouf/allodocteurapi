@@ -2,7 +2,7 @@ package groupff.gmail.edu.sn.allodocteur.entites;
 
 import java.util.List;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -19,18 +19,17 @@ public class Patient  extends  Utilisateur{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
-   
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<RendezVous> rendezVous ;
-
 
     @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL)
     private DossiersMedicale dossierMedicale ;
 
 
-    @OneToMany(mappedBy = "patient" , cascade = CascadeType.ALL)
-    private List<Prescription> prescriptions;
+    @JsonIgnore
+    @OneToMany(mappedBy = "prescriptionPK.patient")
+     private List<Prescription> prescriptions;
 
     //relation avec rappel
     @OneToMany(mappedBy = "patient")
@@ -38,7 +37,6 @@ public class Patient  extends  Utilisateur{
 
     public Patient(String nom, String prenom, String sexe, String age, String adresse, String telephone, String profil, String email, String password, String motif,  List<RendezVous> rendezVous, DossiersMedicale dossierMedicale, List<Prescription> prescriptions, List<Rappel> rappels) {
         super();
-       
         this.rendezVous = rendezVous;
         this.dossierMedicale = dossierMedicale;
         this.prescriptions = prescriptions;

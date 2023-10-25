@@ -29,7 +29,6 @@ public class MedecinDTO extends UserRegistrationDTO{
         //appelle de la methode update de UserRegistrationDTO
         medecin.setSpecialite(this.specialite) ;
         updateData(medecin) ;
-
         return medecin ;
     }
     

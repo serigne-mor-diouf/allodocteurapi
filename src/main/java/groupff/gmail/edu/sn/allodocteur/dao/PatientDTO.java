@@ -26,7 +26,6 @@ public class PatientDTO extends UserRegistrationDTO {
     // creeer un patient
     public Patient toPatient(){
         Patient patient = new  Patient() ;
-        //
         //appelle de la methode update de UserRegistrationDTO
         updateData(patient);
         // a faire  creation rendezvous avec le motif

@@ -9,12 +9,17 @@ import groupff.gmail.edu.sn.allodocteur.repositories.MedecinRepository;
 
 @Service
 public class MedecinService {
-    @Autowired
-   private MedecinRepository medecinRepository ;
+  @Autowired
+  private MedecinRepository medecinRepository ;
 
     // creation de compte medecin
-   public Medecin savMedecin(MedecinDTO medecinDTO){
-     return medecinRepository.save(medecinDTO.toMedecin()) ;
-   }
+    public Medecin savMedecin(MedecinDTO medecinDTO){
+      return medecinRepository.save(medecinDTO.toMedecin()) ;
+    }
+   
+  public void  delete(){
+
+  }
+   
 
 }

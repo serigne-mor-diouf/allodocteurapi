@@ -1,12 +1,8 @@
 package groupff.gmail.edu.sn.allodocteur.entites;
-
 import jakarta.persistence.*;
 
-//@Entity
-//utilisaterur abstracteur de classe
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.JOINED) // Utilisation de l'héritage "table par classe" (table per class)
-@Table (name = "utilisateur")
 public abstract class  Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +20,8 @@ public abstract class  Utilisateur {
     private String password ;
 
     
-    private String statut;
+    @Column(name = "statut", columnDefinition = "int default 1")
+    private int statut;
 
     public Utilisateur(){
 
@@ -122,11 +119,11 @@ public abstract class  Utilisateur {
         this.password = password;
     }
 
-    public String getStatut() {
+    public int getStatut() {
         return statut;
     }
 
-    public void setStatut(String statut) {
+    public void setStatut(int statut) {
         this.statut = statut;
     }
 }

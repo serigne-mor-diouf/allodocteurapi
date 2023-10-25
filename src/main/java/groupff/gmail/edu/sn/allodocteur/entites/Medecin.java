@@ -15,41 +15,34 @@ public class Medecin extends  Utilisateur {
     @OneToMany(mappedBy = "medecin", cascade = CascadeType.ALL)
     private List<RendezVous> rendezVous;
     
-
-
     @OneToMany(mappedBy = "medecinDossierPk.medecin" , cascade = CascadeType.ALL)
     private List<MedecinDossier> medecinDossiers;
 
+    @OneToMany(mappedBy = "prescriptionPK.medecin")
+     private List<Prescription> prescriptions;
 
     @OneToMany(mappedBy = "medecin" , cascade = CascadeType.ALL)
-    private List<Prescription> prescriptions;
+    private List<Planing> planings ;
 
+    public Medecin(){
 
-//constructors
-
-   
-
-    @Override
-    public Long getId() {
-        return id;
     }
-
-  
-
 
     public Medecin(String nom, String prenom, String sexe, int age, String adresse, String telephone, String profil,
             String email, String password, String specialite, List<RendezVous> rendezVous,
-            List<MedecinDossier> medecinDossiers, List<Prescription> prescriptions) {
+            List<MedecinDossier> medecinDossiers, List<Prescription> prescriptions, List<Planing> planings) {
         super(nom, prenom, sexe, age, adresse, telephone, profil, email, password);
         this.specialite = specialite;
         this.rendezVous = rendezVous;
         this.medecinDossiers = medecinDossiers;
         this.prescriptions = prescriptions;
+        this.planings = planings;
     }
 
+    public Long getId() {
+        return id;
+    }
 
-
-    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -62,21 +55,21 @@ public class Medecin extends  Utilisateur {
         this.specialite = specialite;
     }
 
-   public List<RendezVous> getRendezVous() {
-       return rendezVous;
-   }
+    public List<RendezVous> getRendezVous() {
+        return rendezVous;
+    }
 
-   public void setRendezVous(List<RendezVous> rendezVous) {
-       this.rendezVous = rendezVous;
-   }
-public List<MedecinDossier> getMedecinDossiers() {
-    return medecinDossiers;
-}
+    public void setRendezVous(List<RendezVous> rendezVous) {
+        this.rendezVous = rendezVous;
+    }
 
-public void setMedecinDossiers(List<MedecinDossier> medecinDossiers) {
-    this.medecinDossiers = medecinDossiers;
-}
+    public List<MedecinDossier> getMedecinDossiers() {
+        return medecinDossiers;
+    }
 
+    public void setMedecinDossiers(List<MedecinDossier> medecinDossiers) {
+        this.medecinDossiers = medecinDossiers;
+    }
 
     public List<Prescription> getPrescriptions() {
         return prescriptions;
@@ -86,9 +79,17 @@ public void setMedecinDossiers(List<MedecinDossier> medecinDossiers) {
         this.prescriptions = prescriptions;
     }
 
-    public Medecin() {
-
-
-
+    public List<Planing> getPlanings() {
+        return planings;
     }
+
+    public void setPlanings(List<Planing> planings) {
+        this.planings = planings;
+    }
+
+   
+    
+
+   
+
 }
