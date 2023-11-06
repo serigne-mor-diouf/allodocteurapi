@@ -24,7 +24,7 @@ public abstract class  Utilisateur {
     private int statut;
 
     public Utilisateur(){
-
+        this.statut = 1; 
     }
 
     public Utilisateur(String nom, String prenom, String sexe, int age, String adresse, String telephone, String profil, String email, String password) {
@@ -126,4 +126,31 @@ public abstract class  Utilisateur {
     public void setStatut(int statut) {
         this.statut = statut;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Utilisateur other = (Utilisateur) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+    
 }

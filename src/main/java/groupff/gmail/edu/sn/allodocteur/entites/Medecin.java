@@ -2,17 +2,19 @@ package groupff.gmail.edu.sn.allodocteur.entites;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+@JsonPropertyOrder
 @Entity
 @Table(name = "medecin")
-public class Medecin extends  Utilisateur {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Medecin extends  Utilisateur implements Serializable {
     private String specialite ;
 
-    @OneToMany(mappedBy = "medecin", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "medecin")
     private List<RendezVous> rendezVous;
     
     @OneToMany(mappedBy = "medecinDossierPk.medecin" , cascade = CascadeType.ALL)
@@ -21,6 +23,7 @@ public class Medecin extends  Utilisateur {
     @OneToMany(mappedBy = "prescriptionPK.medecin")
      private List<Prescription> prescriptions;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "medecin" , cascade = CascadeType.ALL)
     private List<Planing> planings ;
 
@@ -39,14 +42,7 @@ public class Medecin extends  Utilisateur {
         this.planings = planings;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    
     public String getSpecialite() {
         return specialite;
     }

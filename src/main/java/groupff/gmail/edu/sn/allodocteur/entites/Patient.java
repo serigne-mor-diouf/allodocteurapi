@@ -20,9 +20,11 @@ public class Patient  extends  Utilisateur{
 
     private Long id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<RendezVous> rendezVous ;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL)
     private DossiersMedicale dossierMedicale ;
 
@@ -32,6 +34,7 @@ public class Patient  extends  Utilisateur{
      private List<Prescription> prescriptions;
 
     //relation avec rappel
+    @JsonIgnore
     @OneToMany(mappedBy = "patient")
     private List<Rappel> rappels;
 

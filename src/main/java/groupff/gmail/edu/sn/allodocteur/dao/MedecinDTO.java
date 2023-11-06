@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class MedecinDTO extends UserRegistrationDTO{
+
+    private Long id ;
+
     @NotEmpty
     @NotNull
     @Size()
@@ -22,6 +25,13 @@ public class MedecinDTO extends UserRegistrationDTO{
     public void setSpecialite(String specialite) {
         this.specialite = specialite;
     }
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
   
     //creer un medecin
     public Medecin toMedecin(){
@@ -30,6 +40,11 @@ public class MedecinDTO extends UserRegistrationDTO{
         medecin.setSpecialite(this.specialite) ;
         updateData(medecin) ;
         return medecin ;
+    }
+
+    @Override
+    public String toString() {
+        return "{ specialite  = "+ specialite + "" + super.toString()+"}";
     }
     
 }

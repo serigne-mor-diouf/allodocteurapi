@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import groupff.gmail.edu.sn.allodocteur.dao.PatientDTO;
@@ -19,10 +20,14 @@ public class PatientService {
 
     @Autowired
     private MedecinRepository medecinRepository ;
+    //enregistrer le profil patient par defaut
+    @Value("${profile1}")
+    private String profil;
 
     public Patient savePatient(PatientDTO patientDTO) {
-
-        return patientRepository.save(patientDTO.toPatient());
+        Patient patient =  patientDTO.toPatient() ;
+        patient.setProfil(profil) ;
+        return patientRepository.save(patient);
     }
 
     // lister les patients
@@ -47,16 +52,10 @@ public class PatientService {
         return medecins;
     }
 
-    //gestions des exceptions 
-    public class PatientRegistrationException extends RuntimeException {
-        public PatientRegistrationException(String message) {
-            super(message);
-        }
-
-        @Override
-        public String toString() {
-            return "PatientRegistrationException []";
-        }
+        //rechercher un medecin par son nom et prenom
+        public  List<Medecin> findByNomAndPrenom(String nom , String prenom){
+        List<Medecin> medecins = medecinRepository.findByNomAndPrenom(nom, prenom) ;
+        return medecins ;
     }
 }
 

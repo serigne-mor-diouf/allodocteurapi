@@ -1,35 +1,55 @@
 package groupff.gmail.edu.sn.allodocteur.services;
-import java.sql.Time;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import groupff.gmail.edu.sn.allodocteur.dao.MedecinDTO;
+import groupff.gmail.edu.sn.allodocteur.dao.PatientDTO;
+import groupff.gmail.edu.sn.allodocteur.dao.RendezvousDTO;
 import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 import groupff.gmail.edu.sn.allodocteur.entites.RendezVous;
+import groupff.gmail.edu.sn.allodocteur.repositories.MedecinRepository;
+import groupff.gmail.edu.sn.allodocteur.repositories.PatientRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.RendezvousRepository;
 
 @Service
 public class RendezvousService {
+    @Value("${rendezvous}")
+    private String  rendezvous;
+
    @Autowired
    private RendezvousRepository rendezvousRepository ;
-   //lister les rendez_vous
+
+   @Autowired
+   private MedecinRepository medecinRepository ;
+
+   @Autowired
+   private PatientRepository patientRepository ;
+   
    public List<RendezVous> getRendezVous(){
+      System.out.println("liste des rv");
       return rendezvousRepository.findAll() ;
    }
 
-   //planifier un rv a un patient 
-   public RendezVous planifierRendezVous(Medecin medecin, Patient patient, Date date, Time heure, String statut) {
-      // Créez un objet RendezVous avec les informations fournies
-      RendezVous rendezVous = new RendezVous();
-      rendezVous.setMedecin(medecin);
-      rendezVous.setPatient(patient);
-      rendezVous.setDate(date);
-      rendezVous.setHeure(heure);
-      rendezVous.setStatut(statut);
-      // Enregistrez le rendez-vous dans la base de données
-      return rendezvousRepository.save(rendezVous);
-   }
+  public RendezVous planifierRendezVous(MedecinDTO medecinDTO, PatientDTO patientDTO, Date date, String motif) {
+    // Recherchez les objets Medecin et Patient correspondant à partir de leurs DTO
+    Optional<Medecin> medecin = medecinRepository.findById(medecinDTO.getId());
+    Optional<Patient> patient = patientRepository.findById(patientDTO.getId());
+
+    RendezVous rendezVous = new RendezVous();
+    rendezVous.setMedecin(medecin.get());
+    rendezVous.setPatient(patient.get());
+    rendezVous.setMotif(motif);
+    rendezVous.setDate(date);
+   // rendezVous.setStatut("planifié"); // Assurez-vous que cela correspond à la logique de votre application
+    // Enregistrez le rendez-vous dans la base de données
+    return rendezvousRepository.save(rendezVous);
+}
+
 
     
    // Supprimez le rendez-vous
@@ -49,13 +69,13 @@ public class RendezvousService {
    }
 
    //mettre  a jour un rv
-    public RendezVous modifierRendezVous(RendezVous rendezVous) {
+    public RendezVous modifierRendezVous(RendezvousDTO rendezVous) {
         // Vérifiez si le rendez-vous existe
         RendezVous existingRendezVous = rendezvousRepository.findById(rendezVous.getId()).orElse(null);
         if (existingRendezVous == null) {
             throw new RuntimeException("Le rendez-vous n'existe pas.");
         }
-        RendezVous updatedRendezVous = rendezvousRepository.save(rendezVous);
+        RendezVous updatedRendezVous = rendezvousRepository.save(existingRendezVous);
         return updatedRendezVous;
     }
 

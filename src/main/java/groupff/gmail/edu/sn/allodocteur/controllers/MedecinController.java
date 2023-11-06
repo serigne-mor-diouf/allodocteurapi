@@ -24,9 +24,9 @@ public class MedecinController {
     private MedecinService medecinService ;
     @Autowired
     private PatientService patientService ;
-
+    
     @PostMapping
-    public ResponseEntity<Long> saveMedecin( @RequestBody MedecinDTO medecinDTO){
+    public ResponseEntity<Long> saveMedecin(@RequestBody MedecinDTO medecinDTO){
         System.out.println("enregistrement MdecinDto = "+medecinDTO);
         Medecin  medecin = medecinService.savMedecin(medecinDTO);
            // enregistre un patient en recuperant la requette atendue ici 200
@@ -34,10 +34,15 @@ public class MedecinController {
     }
     // lister medecin
     @GetMapping
-    public List<Medecin> getMedecins(){
-        return patientService.getMedecins();
+    public ResponseEntity<List<Medecin>> getMedecins() {
+        List<Medecin> medecins = patientService.getMedecins();
+    
+        if (medecins != null && !medecins.isEmpty()) {
+            return ResponseEntity.ok(medecins); 
+        } else {
+            return ResponseEntity.notFound().build(); 
+        }
     }
-
-    //
+    
 }
 

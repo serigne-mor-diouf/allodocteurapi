@@ -37,6 +37,37 @@ public class PrescriptionPK {
         this.patient = patient;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((medecin == null) ? 0 : medecin.hashCode());
+        result = prime * result + ((patient == null) ? 0 : patient.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PrescriptionPK other = (PrescriptionPK) obj;
+        if (medecin == null) {
+            if (other.medecin != null)
+                return false;
+        } else if (!medecin.equals(other.medecin))
+            return false;
+        if (patient == null) {
+            if (other.patient != null)
+                return false;
+        } else if (!patient.equals(other.patient))
+            return false;
+        return true;
+    }
+
 
     
 }

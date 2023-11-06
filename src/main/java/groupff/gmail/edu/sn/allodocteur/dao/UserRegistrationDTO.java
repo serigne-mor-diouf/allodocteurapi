@@ -1,7 +1,6 @@
 package groupff.gmail.edu.sn.allodocteur.dao;
 
-import org.springframework.security.crypto.bcrypt.BCrypt;
-
+import groupff.gmail.edu.sn.allodocteur.AllodocteurHashPassword;
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import jakarta.persistence.Column;
 import jakarta.validation.Valid;
@@ -30,8 +29,6 @@ public class UserRegistrationDTO {
     @Size(min = 9, max =15 )
     private String telephone ;
 
-    private String profil ;
-
     @NotEmpty
     @Email
     private String email ;
@@ -41,7 +38,7 @@ public class UserRegistrationDTO {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre")
     private String password;
 
-       @Column(columnDefinition = "VARCHAR(255) DEFAULT '1' CHECK (statut IN ('1', '0'))")
+    @Column(name = "satut", columnDefinition = "int default 1")  
     private String statut;
 
     public UserRegistrationDTO(){
@@ -97,14 +94,6 @@ public class UserRegistrationDTO {
         this.telephone = telephone;
     }
 
-    public String getProfil() {
-        return profil;
-    }
-
-    public void setProfil(String profil) {
-        this.profil = profil ;
-    }
-
 
     public String getEmail() {
         return email;
@@ -122,9 +111,10 @@ public class UserRegistrationDTO {
         this.password = password;
     }
 //
-    public void updateData( Utilisateur utilisateur){
-        //cripter le mot de passe
-          String hashedPassword = BCrypt.hashpw(this.getPassword(), BCrypt.gensalt());
+    public void updateData(Utilisateur utilisateur){
+        //cripter le mot de passe  en base 64
+        System.out.println("pwd "+utilisateur.getPassword());
+        String hash = AllodocteurHashPassword.genSHAS512(this.getPassword());
         // Créez un objet utilisateur
         utilisateur.setNom(this.getNom());
         utilisateur.setPrenom(this.getPrenom());
@@ -132,18 +122,16 @@ public class UserRegistrationDTO {
         utilisateur.setAge(this.getAge());
         utilisateur.setAdresse(this.getAdresse());
         utilisateur.setTelephone(this.getTelephone());
-        utilisateur.setProfil(this.getProfil());
+        //utilisateur.setProfil(this.getProfil());
         utilisateur.setEmail(this.getEmail());
-        utilisateur.setPassword(hashedPassword);
-       
-
+        utilisateur.setPassword(hash);
     }
 
 
     @Override
     public String toString() {
         return " nom=" + nom + ", prenom=" + prenom + ", sexe=" + sexe + ", age=" + age
-                + ", adresse=" + adresse + ", telephone=" + telephone + ", profil=" + profil + ", email=" + email
+                + ", adresse=" + adresse + ", telephone=" + telephone + ", email=" + email
                 + ", password=" + password ;
     }
 

@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Size;
 
 
 public class PatientDTO extends UserRegistrationDTO {
+
+    private Long id ;
+
     @NotEmpty
     @NotNull
     @Size()
@@ -23,6 +26,14 @@ public class PatientDTO extends UserRegistrationDTO {
         this.motif = motif;
     }
   
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
     // creeer un patient
     public Patient toPatient(){
         Patient patient = new  Patient() ;

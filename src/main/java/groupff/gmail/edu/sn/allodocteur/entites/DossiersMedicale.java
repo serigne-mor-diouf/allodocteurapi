@@ -15,8 +15,26 @@
         private Long numero;
 
         // Autres attributs
-        private List<String>allergi ;
-        private List<String> antecedent ;
+        @Column(name = "traitement")
+        private List<String> traitements;
+    
+        @Column(name = "allergie")
+        private List<String> allergies;
+
+        @Column(name = "diagnostic")
+        private List<String> diagnostics;
+    
+        @Column(name = "groupeSanguin")
+        private String groupeSanguin;
+    
+        @Column(name = "poids")
+        private double poids;
+    
+        @Column(name = "taille")
+        private double taille;
+    
+        @Column(name = "date")
+        @Temporal(TemporalType.DATE)
         private Date date ;
 
         @OneToOne
@@ -31,43 +49,61 @@
 
         }
 
-        public DossiersMedicale(List<String> allergi, List<String> traitement, Date date, Patient patient,
-            List<MedecinDossier> medecinDossiers) {
-            this.allergi = allergi;
-            this.antecedent = traitement;
-            this.date = date;
-            this.patient = patient;
-            this.medecinDossiers = medecinDossiers;
+        public List<String> getTraitements() {
+            return traitements;
         }
 
+        public void setTraitements(List<String> traitements) {
+            this.traitements = traitements;
+        }
+
+        public List<String> getAllergies() {
+            return allergies;
+        }
+
+        public void setAllergies(List<String> allergies) {
+            this.allergies = allergies;
+        }
+
+        public List<String> getDiagnostics() {
+            return diagnostics;
+        }
+
+        public void setDiagnostics(List<String> diagnostics) {
+            this.diagnostics = diagnostics;
+        }
+
+        public String getGroupeSanguin() {
+            return groupeSanguin;
+        }
+
+         public void setGroupeSanguin(String groupeSanguin) {
+            this.groupeSanguin = groupeSanguin;
+        }
+
+        public double getPoids() {
+            return poids;
+        }
+
+        public void setPoids(double poids) {
+            this.poids = poids;
+        }
+
+        public double getTaille() {
+            return taille;
+        }
+
+        public void setTaille(double taille) {
+            this.taille = taille;
+        }
 
         public void setNumero(Long numero) {
             this.numero = numero;
         }
 
-        
         public Long getNumero() {
             return numero;
         }
-
-        public List<String> getAllergi() {
-            return allergi;
-        }
-
-
-        public void setAllergi(List<String> allergi) {
-            this.allergi = allergi;
-        }
-
-
-       public List<String> getAntecedent() {
-           return antecedent;
-       }
-
-       public void setAntecedent(List<String> antecedent) {
-           this.antecedent = antecedent;
-       }
-
 
         public List<MedecinDossier> getMedecinDossiers() {
             return medecinDossiers;
@@ -95,13 +131,7 @@
             this.patient = patient;
         }
 
-        // public Medecin getMedecin() {
-        //     return medecin;
-        // }
-
-        // public void setMedecin(Medecin medecin) {
-        //     this.medecin = medecin;
-        // }
+        
     }
 
 
