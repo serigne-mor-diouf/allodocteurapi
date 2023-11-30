@@ -34,13 +34,16 @@ public class MedecinDTO extends UserRegistrationDTO{
     }
   
     //creer un medecin
-    public Medecin toMedecin(){
+    public Medecin toMedecin() {
         Medecin medecin = new Medecin();
-        //appelle de la methode update de UserRegistrationDTO
-        medecin.setSpecialite(this.specialite) ;
-        updateData(medecin) ;
-        return medecin ;
+        // Assurez-vous que medecinDTO.getSpecialite() n'est pas null avant de l'affecter
+        if (this.getSpecialite() != null) {
+            medecin.setSpecialite(this.getSpecialite());
+        }
+        updateData(medecin);
+        return medecin;
     }
+    
 
     @Override
     public String toString() {

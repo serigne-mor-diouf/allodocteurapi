@@ -1,31 +1,15 @@
 package groupff.gmail.edu.sn.allodocteur.dao;
 
 import groupff.gmail.edu.sn.allodocteur.entites.Patient;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 
 public class PatientDTO extends UserRegistrationDTO {
 
     private Long id ;
 
-    @NotEmpty
-    @NotNull
-    @Size()
-    private  String  motif ;
     
     public PatientDTO() {
     }
-
-    public String getMotif() {
-        return motif;
-    }
-
-    public void setMotif(String motif) {
-        this.motif = motif;
-    }
-  
 
     public Long getId() {
         return id;
@@ -44,6 +28,6 @@ public class PatientDTO extends UserRegistrationDTO {
     }
 
     public String tosString(){
-        return "{ motif  = "+ motif + "" + super.toString()+"}" ;
+        return "{" + super.toString()+"}" ;
     }
 }

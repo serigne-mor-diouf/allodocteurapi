@@ -7,23 +7,23 @@ import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 import jakarta.persistence.Column;
 
 public class RendezvousDTO {
-    private Long id;
-    private Date date;
+    private Long id ;
+    private Date date ;
     @Column(name = "statut", columnDefinition = "VARCHAR(255) DEFAULT 'confirmer'")
     private String statut;
 
     private String motif ;
     private Patient patient ;
     private Medecin medecin;
+    private Date dateCreation ;
 
-    
-
-    public RendezvousDTO(Date date, String statut, String motif, Patient patient, Medecin medecin) {
+    public RendezvousDTO(Date date, Date dateCreation ,String statut, String motif, Patient patient, Medecin medecin) {
         this.date = date;
         this.statut = statut;
         this.motif = motif;
         this.patient = patient;
         this.medecin = medecin;
+        this.dateCreation = dateCreation ;
     }
 
     public RendezvousDTO(){
@@ -67,5 +67,12 @@ public class RendezvousDTO {
         this.medecin = medecin;
     }
 
+    public Date getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(Date dateCreation) {
+        this.dateCreation = dateCreation;
+    }
     
 }

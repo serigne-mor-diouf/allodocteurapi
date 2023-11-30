@@ -21,8 +21,6 @@ public class Planing  implements Serializable{
     @Column(name = "disponibilite", columnDefinition = "int default 1")
     private int disponibilite;
 
-   
-
     @ManyToOne
     @JoinColumn(name = "medecin_id")
     private Medecin medecin ;

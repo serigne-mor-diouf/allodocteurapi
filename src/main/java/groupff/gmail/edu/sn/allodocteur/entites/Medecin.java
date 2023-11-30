@@ -2,47 +2,45 @@ package groupff.gmail.edu.sn.allodocteur.entites;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder
 @Entity
 @Table(name = "medecin")
-public class Medecin extends  Utilisateur implements Serializable {
+public class Medecin extends  Utilisateur {
     private String specialite ;
 
     @JsonIgnore
     @OneToMany(mappedBy = "medecin")
     private List<RendezVous> rendezVous;
-    
-    @OneToMany(mappedBy = "medecinDossierPk.medecin" , cascade = CascadeType.ALL)
-    private List<MedecinDossier> medecinDossiers;
 
-    @OneToMany(mappedBy = "prescriptionPK.medecin")
+    @JsonIgnore
+    @OneToMany(mappedBy = "medecin" , cascade = CascadeType.ALL)
+    private List<Consultation>  consultations;
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "medecin")
      private List<Prescription> prescriptions;
 
     @JsonIgnore
     @OneToMany(mappedBy = "medecin" , cascade = CascadeType.ALL)
     private List<Planing> planings ;
 
-    public Medecin(){
-
+    public Medecin() {
     }
 
-    public Medecin(String nom, String prenom, String sexe, int age, String adresse, String telephone, String profil,
-            String email, String password, String specialite, List<RendezVous> rendezVous,
-            List<MedecinDossier> medecinDossiers, List<Prescription> prescriptions, List<Planing> planings) {
-        super(nom, prenom, sexe, age, adresse, telephone, profil, email, password);
-        this.specialite = specialite;
-        this.rendezVous = rendezVous;
-        this.medecinDossiers = medecinDossiers;
-        this.prescriptions = prescriptions;
-        this.planings = planings;
+
+    public Medecin(String nom, String prenom, String sexe, int age, String adresse, String telephone) {
+        super(nom, prenom, sexe, age, adresse, telephone);
     }
 
-    
+
     public String getSpecialite() {
         return specialite;
     }
@@ -59,13 +57,6 @@ public class Medecin extends  Utilisateur implements Serializable {
         this.rendezVous = rendezVous;
     }
 
-    public List<MedecinDossier> getMedecinDossiers() {
-        return medecinDossiers;
-    }
-
-    public void setMedecinDossiers(List<MedecinDossier> medecinDossiers) {
-        this.medecinDossiers = medecinDossiers;
-    }
 
     public List<Prescription> getPrescriptions() {
         return prescriptions;
@@ -83,9 +74,21 @@ public class Medecin extends  Utilisateur implements Serializable {
         this.planings = planings;
     }
 
-   
-    
 
-   
+
+    public List<Consultation> getConsultations() {
+        return consultations;
+    }
+
+    public void setConsultations(List<Consultation> consultations) {
+        this.consultations = consultations;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+       return List.of(new SimpleGrantedAuthority("MEDECIN"));
+        //return List.of(new SimpleGrantedAuthority("MEDECIN") , new SimpleGrantedAuthority("USER"));
+    }
 
 }

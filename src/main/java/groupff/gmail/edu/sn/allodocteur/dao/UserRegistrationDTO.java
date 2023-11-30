@@ -1,5 +1,7 @@
 package groupff.gmail.edu.sn.allodocteur.dao;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import groupff.gmail.edu.sn.allodocteur.AllodocteurHashPassword;
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import jakarta.persistence.Column;
@@ -113,9 +115,8 @@ public class UserRegistrationDTO {
 //
     public void updateData(Utilisateur utilisateur){
         //cripter le mot de passe  en base 64
-        System.out.println("pwd "+utilisateur.getPassword());
-        String hash = AllodocteurHashPassword.genSHAS512(this.getPassword());
-        // Créez un objet utilisateur
+     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(this.getPassword());
         utilisateur.setNom(this.getNom());
         utilisateur.setPrenom(this.getPrenom());
         utilisateur.setSexe(this.getSexe());
@@ -124,10 +125,9 @@ public class UserRegistrationDTO {
         utilisateur.setTelephone(this.getTelephone());
         //utilisateur.setProfil(this.getProfil());
         utilisateur.setEmail(this.getEmail());
-        utilisateur.setPassword(hash);
+        utilisateur.setPassword(hashedPassword);
     }
-
-
+    
     @Override
     public String toString() {
         return " nom=" + nom + ", prenom=" + prenom + ", sexe=" + sexe + ", age=" + age

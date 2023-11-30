@@ -1,13 +1,11 @@
 package groupff.gmail.edu.sn.allodocteur.services;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import groupff.gmail.edu.sn.allodocteur.dao.MedecinDTO;
-import groupff.gmail.edu.sn.allodocteur.dao.PatientDTO;
+
 import groupff.gmail.edu.sn.allodocteur.dao.RendezvousDTO;
 import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import groupff.gmail.edu.sn.allodocteur.entites.Patient;
@@ -29,55 +27,72 @@ public class RendezvousService {
 
    @Autowired
    private PatientRepository patientRepository ;
-   
-   public List<RendezVous> getRendezVous(){
-      System.out.println("liste des rv");
-      return rendezvousRepository.findAll() ;
-   }
 
-  public RendezVous planifierRendezVous(MedecinDTO medecinDTO, PatientDTO patientDTO, Date date, String motif) {
-    // Recherchez les objets Medecin et Patient correspondant à partir de leurs DTO
-    Optional<Medecin> medecin = medecinRepository.findById(medecinDTO.getId());
-    Optional<Patient> patient = patientRepository.findById(patientDTO.getId());
+   //rechercher un rv par id
+   public RendezVous getRendezVous(Long rendezVousId) {
+      Optional<RendezVous> rendezVousOptional = rendezvousRepository.findById(rendezVousId);
+      return rendezVousOptional.orElse(null);
+  }
 
-    RendezVous rendezVous = new RendezVous();
-    rendezVous.setMedecin(medecin.get());
-    rendezVous.setPatient(patient.get());
-    rendezVous.setMotif(motif);
-    rendezVous.setDate(date);
-   // rendezVous.setStatut("planifié"); // Assurez-vous que cela correspond à la logique de votre application
-    // Enregistrez le rendez-vous dans la base de données
-    return rendezvousRepository.save(rendezVous);
+//liste des rv
+  public List<RendezVous> getAllRendezVous() {
+      return rendezvousRepository.findAll();
+  }
+
+  // Creer un rendez-vous pour le patient
+  public RendezVous planifierRendezVous(RendezvousDTO rendezVousDTO) {
+    Optional<Medecin> medecinOptional = medecinRepository.findById(rendezVousDTO.getMedecin().getId());
+    Optional<Patient> patientOptional = patientRepository.findById(rendezVousDTO.getPatient().getId());
+
+    // vérifier si le medecin et le patient existent
+    if (medecinOptional.isPresent() && patientOptional.isPresent()) {
+        Medecin medecin = medecinOptional.get();
+        Patient patient = patientOptional.get();
+
+        RendezVous rendezVous = new RendezVous();
+        rendezVous.setMedecin(medecin);
+        rendezVous.setPatient(patient);
+        rendezVous.setMotif(rendezVousDTO.getMotif());
+        rendezVous.setDate(rendezVousDTO.getDate());
+        rendezVous.setStatut(rendezVousDTO.getStatut());
+        rendezVous.setDateCreation(rendezVousDTO.getDateCreation());
+
+        return rendezvousRepository.save(rendezVous);
+    } else {
+        throw new RuntimeException("Médecin ou patient non trouvé pour les ID : " + rendezVousDTO.getMedecin().getId() + ", " + rendezVousDTO.getPatient().getId());
+    }
 }
-
 
     
    // Supprimez le rendez-vous
     public void supprimerRendezVous(Long id) {
-      // Vérifiez si le rendez-vous existe
+      // Vérifiez si le rendez-vous n'existe pas 
       if (!rendezvousRepository.existsById(id)) {
-         // Gérez l'erreur, par exemple, en lançant une exception
          throw new RuntimeException("Le rendez-vous n'existe pas.");
       }
-      // Supprimez le rendez-vous de la base de données
       rendezvousRepository.deleteById(id);
   }
 
-   // Recherchez les rendez-vous en fonction du nom et du prénom du patient
-   public List<RendezVous> rechercherRendezVousParPatient(String nom, String prenom) {  
-      return rendezvousRepository.findByPatientNomAndPatientPrenom(nom, prenom);
+   // Recherchez les rendez-vous en fonction du nom patient
+   public List<RendezVous> rechercherRendezVousParPatient(String nom) {  
+      return rendezvousRepository.findByPatientNom(nom);
    }
 
-   //mettre  a jour un rv
-    public RendezVous modifierRendezVous(RendezvousDTO rendezVous) {
-        // Vérifiez si le rendez-vous existe
-        RendezVous existingRendezVous = rendezvousRepository.findById(rendezVous.getId()).orElse(null);
-        if (existingRendezVous == null) {
-            throw new RuntimeException("Le rendez-vous n'existe pas.");
-        }
-        RendezVous updatedRendezVous = rendezvousRepository.save(existingRendezVous);
-        return updatedRendezVous;
+   public RendezVous modifierRendezVous( Long id , RendezvousDTO rendezVousDTO) {
+    // Recherchez le rendez-vous par ID
+    Optional<RendezVous> existRendezVousOptional = rendezvousRepository.findById(id);
+        if (existRendezVousOptional.isPresent()) {
+            RendezVous  updatedRendezVous = existRendezVousOptional.get() ;
+                updatedRendezVous.setDate(rendezVousDTO.getDate());
+                updatedRendezVous.setDateCreation(rendezVousDTO.getDateCreation()) ;
+                updatedRendezVous.setStatut(rendezVousDTO.getStatut()) ;
+                updatedRendezVous.setMotif(rendezVousDTO.getMotif()) ;
+             // Enregistrez le rendez-vous mis à jour
+        return  rendezvousRepository.save(updatedRendezVous);
+    } else {
+        throw new RuntimeException("Le rendez-vous n'existe pas pour id."+id);
     }
+}
 
 
    //lister  les rv confirmer

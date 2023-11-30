@@ -1,0 +1,84 @@
+package groupff.gmail.edu.sn.allodocteur.controllers;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import groupff.gmail.edu.sn.allodocteur.dao.ConsultationDTO;
+import groupff.gmail.edu.sn.allodocteur.entites.Consultation;
+import groupff.gmail.edu.sn.allodocteur.repositories.ConsultationRepository;
+import groupff.gmail.edu.sn.allodocteur.services.ConsultationService;
+
+@RestController
+@RequestMapping("/api/consultations") 
+public class ConsultationController {
+    @Autowired
+    private ConsultationService consultationService ; 
+    
+    @Autowired
+    private ConsultationRepository consultationRepository ;
+    @GetMapping
+    public List<Consultation> getConsultation(){
+        return consultationService.getConsultation();
+    }
+
+    //creer une consultation patien
+    @PostMapping
+    public ResponseEntity<?> createConsultation(
+        @RequestBody ConsultationDTO consultationDTO){
+        Consultation  consultation = consultationService.createConsultation(consultationDTO);
+        if (consultation != null) {
+            return ResponseEntity.ok("consulatation créée avec succès");
+            
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+   // Mettre à jour une consultation
+   @PutMapping("/{id}")
+    public ResponseEntity<Consultation> modifierConsultation(@PathVariable Long id,
+            @RequestBody ConsultationDTO consultationDTO) {
+        Optional<Consultation> consultationOptional = consultationRepository.findById(id);
+
+        if (consultationOptional.isPresent()) {
+            Consultation consultationExistante = consultationOptional.get();
+
+            consultationExistante.setMotif(consultationDTO.getMotif());
+            consultationExistante.setAntecedent(consultationDTO.getAntecedent());
+            consultationExistante.setAllergie(consultationDTO.getAllergie());
+            consultationExistante.setDate(consultationDTO.getDate());
+            consultationExistante.setGroupeSanguin(consultationDTO.getGroupeSanguin());
+            consultationExistante.setDiagnostic(consultationDTO.getDiagnostic());
+            consultationExistante.setPoids(consultationDTO.getPoids());
+            consultationExistante.setTaille(consultationDTO.getTaille());
+            consultationExistante.setProfession(consultationDTO.getProfession());
+
+            // Enregistrez la consultation mise à jour dans le repository
+            Consultation updatedConsultation = consultationRepository.save(consultationExistante);
+            return ResponseEntity.ok(updatedConsultation);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+   
+//Supprimer une consultation
+@DeleteMapping("/{id}")
+public void deleteConsultation(@PathVariable Long id){
+    consultationService.deleteConsultation(id);
+}
+
+}

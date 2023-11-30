@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.hibernate.annotations.CreationTimestamp;
 
-@JsonPropertyOrder
 @Entity
 @Table(name = "rendezvous")
 public class RendezVous  implements Serializable{
@@ -14,7 +13,6 @@ public class RendezVous  implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
     
     @Column(name = "statut", columnDefinition = "VARCHAR(255) DEFAULT 'confirmer'")
@@ -23,18 +21,23 @@ public class RendezVous  implements Serializable{
     private String motif ;
 
     // Relation avec le patient
+  
     @ManyToOne
     @JoinColumn(name = "patient_id") // Crée une clé étrangère nommée "patient_id"
     private Patient patient ;
 
     // Relation avec le médecin
+   
     @ManyToOne
     @JoinColumn(name = "medecin_id")
     private Medecin medecin;
+
+    @CreationTimestamp
+    private Date dateCreation ;
     // Constructeurs,
 
     public RendezVous(){
-        this.statut = "confirmer" ; 
+        this.statut = "confirmer" ;
     }
     // getters, setters
 
@@ -43,12 +46,13 @@ public class RendezVous  implements Serializable{
         return id;
     }
 
-    public RendezVous(Date date,  String statut, String motif, Patient patient, Medecin medecin) {
+    public RendezVous(Date date, Date dateCreation , String statut, String motif, Patient patient, Medecin medecin) {
         this.date = date;
         this.statut = statut;
         this.motif = motif;
         this.patient = patient;
         this.medecin = medecin;
+        this.dateCreation = dateCreation ;
     }
 
 
@@ -97,6 +101,21 @@ public class RendezVous  implements Serializable{
 
     public void setMotif(String motif) {
         this.motif = motif;
+    }
+
+    public Date getDateCreation() {
+        return dateCreation;
+    }
+     public void setDateCreation(Date dateCreation) {
+         this.dateCreation = dateCreation;
+     }
+
+     
+
+    @Override
+    public String toString() {
+        return "RendezVous [id=" + id + ", date=" + date + ", statut=" + statut + ", motif=" + motif + ", patient="
+                + patient + ", medecin=" + medecin + ", dateCreation=" + dateCreation + "]";
     }
 
 

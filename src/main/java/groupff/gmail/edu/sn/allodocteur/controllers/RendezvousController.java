@@ -1,10 +1,8 @@
 package groupff.gmail.edu.sn.allodocteur.controllers;
-
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,11 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import groupff.gmail.edu.sn.allodocteur.dao.MedecinDTO;
-import groupff.gmail.edu.sn.allodocteur.dao.PatientDTO;
 import groupff.gmail.edu.sn.allodocteur.dao.RendezvousDTO;
 import groupff.gmail.edu.sn.allodocteur.entites.RendezVous;
+import groupff.gmail.edu.sn.allodocteur.repositories.RendezvousRepository;
 import groupff.gmail.edu.sn.allodocteur.services.RendezvousService;
 
 @RestController
@@ -29,10 +25,13 @@ public class RendezvousController {
 
     @Autowired
     private RendezvousService rendezvousService ;
+
+    @Autowired
+    private RendezvousRepository  rendezvousRepository;
     
   @GetMapping
     public ResponseEntity<List<RendezVous>> getRendezVous(){
-        List<RendezVous> rendezVous = rendezvousService.getRendezVous();
+        List<RendezVous> rendezVous = rendezvousService.getAllRendezVous();
         if(rendezVous!=null && !rendezVous.isEmpty()){
             return ResponseEntity.ok(rendezVous) ;
         }else{
@@ -40,40 +39,75 @@ public class RendezvousController {
         }
     }
 
+
+    @GetMapping("/getRendezVous")
+    public ResponseEntity<RendezVous> getRendezVousById(@RequestParam Long id) {
+        RendezVous rendezVous = rendezvousService.getRendezVous(id);
+        if (rendezVous != null) {
+            return ResponseEntity.ok(rendezVous);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+
     //rechercher un rv  par  nom et prenom
     @GetMapping("/recherchenomprenom")
-    public List<RendezVous>rechercherRendezVous(@RequestParam String nom , @RequestParam  String prenom){
-        return rendezvousService.rechercherRendezVousParPatient(nom , prenom);
+    public List<RendezVous>rechercherRendezVous(@RequestParam String nom){
+        return rendezvousService.rechercherRendezVousParPatient(nom);
     }
 
 
-    //planifier un rv a un patient
     @PostMapping
-    public ResponseEntity<RendezVous> creaRendezVous(@RequestBody MedecinDTO medecin, @RequestBody PatientDTO patient, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date, @RequestParam String motif) {
-        RendezVous rendezVous = rendezvousService.planifierRendezVous(medecin, patient, date, motif);
-
+    public ResponseEntity<?> createRendezVous(@RequestBody RendezvousDTO rendezvousDTO
+    ) 
+       {
+        RendezVous rendezVous = rendezvousService.planifierRendezVous(rendezvousDTO);
+    
         if (rendezVous != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(rendezVous);
+            return ResponseEntity.ok("rendez-vous créée avec succès");
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+    
 
-    //mettre  a jour un rv a un patient
+    // Mettre à jour un rendezvous patient
+
     @PutMapping("/{id}")
-    public RendezVous updatRendezVous(RendezvousDTO rendezVous){
-        return rendezvousService.modifierRendezVous(rendezVous);
-    }
+    public ResponseEntity<RendezVous> updateRendezVous(@PathVariable Long id, @RequestBody RendezvousDTO rendezVousDTO) {
+    
+        Optional<RendezVous> rendezvousOptional =  rendezvousRepository.findById(id);
+        if (rendezvousOptional.isPresent()) {
+            RendezVous rendezVousExistante = rendezvousOptional.get();
 
+                rendezVousExistante.setDate(rendezVousDTO.getDate());
+                rendezVousExistante.setMotif(rendezVousDTO.getMotif());
+                rendezVousExistante.setMedecin(rendezVousDTO.getMedecin());
+
+                RendezVous updatRendezVous = rendezvousRepository.save(rendezVousExistante);
+                return ResponseEntity.ok(updatRendezVous);
+        }else{
+
+            return ResponseEntity.notFound().build();
+        }
+}
     //delete a rv
     @DeleteMapping("/{id}")
-    public void deleteRendezvous( @PathVariable Long id){
+    public void deleteRendezvous(@PathVariable Long id){
         rendezvousService.supprimerRendezVous(id);
     }
 
     //lister  les rv confirmer 
     @GetMapping("/confirmer")
-    public List<RendezVous> listeRendezVousConfirmer(){
-        return rendezvousService.getRendezVousConfirmer();
+    public ResponseEntity<List<RendezVous>> listeRendezVousConfirmer(@PathVariable Long confirmer) {
+        List<RendezVous> rendezVousConfirmer = rendezvousService.getRendezVousConfirmer();
+        
+        if (rendezVousConfirmer.isEmpty()) {        
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null); 
+        } else {
+            return ResponseEntity.ok(rendezVousConfirmer);
+        }
     }
+    
 }

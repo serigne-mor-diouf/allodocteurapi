@@ -1,6 +1,10 @@
 package groupff.gmail.edu.sn.allodocteur.entites;
 
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,7 +14,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 @Entity
 @Table(name = "patient")
@@ -25,12 +28,11 @@ public class Patient  extends  Utilisateur{
     private List<RendezVous> rendezVous ;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "patient", cascade = CascadeType.ALL)
-    private DossiersMedicale dossierMedicale ;
-
+    @OneToMany(mappedBy = "patient" , cascade = CascadeType.ALL)
+    private List<Consultation> consultations;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "prescriptionPK.patient")
+    @OneToMany(mappedBy = "patient")
      private List<Prescription> prescriptions;
 
     //relation avec rappel
@@ -38,16 +40,13 @@ public class Patient  extends  Utilisateur{
     @OneToMany(mappedBy = "patient")
     private List<Rappel> rappels;
 
-    public Patient(String nom, String prenom, String sexe, String age, String adresse, String telephone, String profil, String email, String password, String motif,  List<RendezVous> rendezVous, DossiersMedicale dossierMedicale, List<Prescription> prescriptions, List<Rappel> rappels) {
-        super();
-        this.rendezVous = rendezVous;
-        this.dossierMedicale = dossierMedicale;
-        this.prescriptions = prescriptions;
-        this.rappels = rappels;
+
+    public Patient() {
     }
 
-    public Patient(){
 
+    public Patient(String nom, String prenom, String sexe, int age, String adresse, String telephone) {
+        super(nom, prenom, sexe, age, adresse, telephone);
     }
 
 
@@ -76,14 +75,6 @@ public class Patient  extends  Utilisateur{
         this.prescriptions = prescriptions;
     }
 
-    public DossiersMedicale getDossierMedicale() {
-        return dossierMedicale;
-    }
-
-    public void setDossierMedicale(DossiersMedicale dossierMedicale) {
-        this.dossierMedicale = dossierMedicale;
-    }
-
     public List<Rappel> getRappels() {
         return rappels;
     }
@@ -91,5 +82,21 @@ public class Patient  extends  Utilisateur{
     public void setRappels(List<Rappel> rappels) {
         this.rappels = rappels;
     }
+
+    public List<Consultation> getConsultations() {
+        return consultations;
+    }
+
+    public void setConsultations(List<Consultation> consultations) {
+        this.consultations = consultations;
+    }
+
+  
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+       return List.of(new SimpleGrantedAuthority("PATIENT"));
+      //return List.of(new SimpleGrantedAuthority("PATIENT") , new SimpleGrantedAuthority("USER"));
+    }
+
 
 }

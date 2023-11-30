@@ -1,5 +1,8 @@
 package groupff.gmail.edu.sn.allodocteur.entites;
-
+import java.util.Collection;
+import java.util.List;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,18 +12,13 @@ public class Admin  extends  Utilisateur{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id ;
 
-
-    public Admin(Long id) {
-        this.id = id;
+    public Admin() {
+        
     }
 
-    public Admin(String nom, String prenom, String sexe, String age, String adresse, String telephone, String profil, String email, String password, Long id) {
-        super() ;
+    public Admin(String nom, String prenom, String sexe, int age, String adresse, String telephone, Long id) {
+        super(nom, prenom, sexe, age, adresse, telephone);
         this.id = id;
-    }
-
-    public  Admin(){
-
     }
 
     @Override
@@ -32,4 +30,11 @@ public class Admin  extends  Utilisateur{
     public void setId(Long id) {
         this.id = id;
     }
+   
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+       return List.of(new SimpleGrantedAuthority("ADMIN"));
+        //return List.of(new SimpleGrantedAuthority("MEDECIN") , new SimpleGrantedAuthority("USER"));
+    }
+
 }

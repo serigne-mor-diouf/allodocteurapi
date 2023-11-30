@@ -1,10 +1,7 @@
 package groupff.gmail.edu.sn.allodocteur.dao;
-
 import java.util.Date;
-
 import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import jakarta.persistence.Column;
-
 
 public class PlanningDTO {
     private Long id ;
@@ -20,11 +17,9 @@ public class PlanningDTO {
         this.disponibilite = disponibilite;
         this.medecin = medecin;
     }
-
     
     public PlanningDTO() {
     }
-
 
     public Long getId() {
         return id;

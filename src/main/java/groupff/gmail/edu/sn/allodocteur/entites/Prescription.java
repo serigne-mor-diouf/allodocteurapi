@@ -1,8 +1,7 @@
 package groupff.gmail.edu.sn.allodocteur.entites;
-
 import java.sql.Date;
-import java.sql.Time;
-import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;
 
@@ -10,13 +9,22 @@ import jakarta.persistence.*;
 @Table(name = "prescription")
 public class Prescription {
    
-    @EmbeddedId
-    private  PrescriptionPK  prescriptionPK ;
-    private Date date;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private Time heure;
+    @ManyToOne
+    @JoinColumn(name = "medecin_id")
+    private Medecin medecin;
+
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
+
+    @CreationTimestamp
+    private Date date;
    
-    private  List<String> medicament ;
+    private  String medicament ;
 
     private String description  ;
     
@@ -29,22 +37,50 @@ public class Prescription {
 
     
 
-
-    public PrescriptionPK getPrescriptionPK() {
-        return prescriptionPK;
+    public Long getId() {
+        return id;
     }
 
 
-    public void setPrescriptionPK(PrescriptionPK prescriptionPK) {
-        this.prescriptionPK = prescriptionPK;
+    public Prescription(Medecin medecin, Patient patient, Date date, String medicament, String description) {
+        this.medecin = medecin;
+        this.patient = patient;
+        this.date = date;
+        this.medicament = medicament;
+        this.description = description;
     }
 
-    public List<String> getMedicament() {
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Medecin getMedecin() {
+        return medecin;
+    }
+
+
+    public void setMedecin(Medecin medecin) {
+        this.medecin = medecin;
+    }
+
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public String getMedicament() {
         return medicament;
     }
 
 
-    public void setMedicament(List<String> medicament) {
+    public void setMedicament(String medicament) {
         this.medicament = medicament;
     }
 
@@ -56,16 +92,6 @@ public class Prescription {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-
-     public Time getHeure() {
-        return heure;
-    }
-
-
-    public void setHeure(Time heure) {
-        this.heure = heure;
     }
 
     public void setDate(Date date) {
