@@ -9,6 +9,7 @@ import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 import groupff.gmail.edu.sn.allodocteur.services.AdminService;
 import groupff.gmail.edu.sn.allodocteur.services.PatientService;
+import groupff.gmail.edu.sn.allodocteur.services.UtilisateurService;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -16,8 +17,12 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
     @Autowired
     private PatientService patientService ;
+
+     @Autowired
+    private UtilisateurService utilisateurService;
 
     // Endpoint pour sauvegarder un nouvel admin
     // @PostMapping("/saveAdmin")
@@ -66,6 +71,19 @@ public class AdminController {
     public ResponseEntity<String> deleteMedecin(@PathVariable Long id) {
         adminService.deleteMedecin(id);
         return ResponseEntity.ok("Médecin supprimé avec succès.");
+    }
+
+
+    @PostMapping("/verrouiller/{utilisateurId}")
+    public ResponseEntity<?> verrouillerUtilisateur(@PathVariable Long utilisateurId) {
+        utilisateurService.verrouillerUtilisateur(utilisateurId);
+        return ResponseEntity.ok("Utilisateur verrouillé avec succès.");
+    }
+
+    @PostMapping("/deverrouiller/{utilisateurId}")
+    public ResponseEntity<?> deverrouillerUtilisateur(@PathVariable Long utilisateurId) {
+        utilisateurService.deverrouillerUtilisateur(utilisateurId);
+        return ResponseEntity.ok("Utilisateur déverrouillé avec succès.");
     }
 
 }

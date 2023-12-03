@@ -38,7 +38,7 @@ public class PatientController {
         }
     
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MEDECIN')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'MEDECIN')")
     public ResponseEntity<List<Patient>> getPatients(){
         List<Patient> patients =  patientService.getPatients();
             return ResponseEntity.ok(patients) ;

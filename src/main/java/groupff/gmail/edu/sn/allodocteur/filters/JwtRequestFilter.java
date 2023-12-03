@@ -38,23 +38,29 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-
+    
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             System.out.println("header Authorization");
             String tokenValue = authHeader.substring(7);
-            if(tokenService.isTokenUtilisateurValide(tokenValue)){
+            if (tokenService.isTokenUtilisateurValide(tokenValue)) {
                 Token token = tokenService.findToken(tokenValue);
                 Utilisateur user = token.getUtilisateur();
+    
+                // Vérifier si le compte de l'utilisateur est activé
+                if (!user.isEnabled()) {
+                    throw new RuntimeException("Votre compte est désactivé. Veuillez contacter l'administrateur.");
+                }
+    
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user,
-                null, user.getAuthorities());
+                        null, user.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-            }else{
-                System.out.println("token invalid");
+            } else {
+                System.out.println("Token invalide");
             }
         }
-
+    
         filterChain.doFilter(request, response);
     }
+    
 }

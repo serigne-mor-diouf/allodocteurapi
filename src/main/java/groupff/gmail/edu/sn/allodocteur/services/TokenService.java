@@ -42,16 +42,19 @@ public class TokenService {
         return tokenRepository.findById(value).orElse(null);
     }
 
-     public boolean isTokenUtilisateurValide(String tokenValue) {
-        Token token = tokenRepository.findById(tokenValue).orElse(null) ;
+    public boolean isTokenUtilisateurValide(String tokenValue) {
+        Token token = tokenRepository.findById(tokenValue).orElse(null);
         if (token == null) {
-            return false ;
+            return false;
         }
-
-        String username = extractUsername(tokenValue) ;
-        Utilisateur utilisateur = utilisateurRepository.findByEmail(username) ;
-        return token.isTokenValide() && utilisateur.isValid();
+    
+        String username = extractUsername(tokenValue);
+        Utilisateur utilisateur = utilisateurRepository.findByEmail(username);
+        
+        // Vérifier si le token est valide, l'utilisateur est valide et le compte est activé
+        return token.isTokenValide() && utilisateur.isValid() && utilisateur.isEnabled();
     }
+    
 
      public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -76,27 +79,35 @@ public class TokenService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-     public Token generateToken(Utilisateur user) {
+    public Token generateToken(Utilisateur user) {
+        // Vérifier si l'utilisateur est activé avant de générer le token
+        if (!user.isEnabled()) {
+            throw new RuntimeException("Impossible de générer le token. Votre compte est désactivé. Veuillez contacter l'administrateur.");
+        }
+    
         Map<String, Object> claims = new HashMap<>();
-        List<String>authorities  = user.getAuthorities()
+        List<String> authorities = user.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-
-        claims.put(AUTHORITIES_CLAIM_KEY , authorities);
-        Token token = null ;
-        String tokenValue = null ;
+    
+        claims.put(AUTHORITIES_CLAIM_KEY, authorities);
+        Token token = null;
+        String tokenValue = null;
         Date issuedAt = new Date(System.currentTimeMillis());
-        Date dateExpiration = new Date(issuedAt.getTime()+30*60*1000) ;//30min en moyenne
-        do{
-           tokenValue = createToken(claims, user, issuedAt, dateExpiration);
-           token = tokenRepository.findById(tokenValue).orElse(null) ;
-        } while(token != null) ;
-        token = new Token(tokenValue , issuedAt ,dateExpiration , user);
-        tokenRepository.save(token) ;
-
-        return token ;
+        Date dateExpiration = new Date(issuedAt.getTime() + 30 * 60 * 1000); // 30min en moyenne
+    
+        do {
+            tokenValue = createToken(claims, user, issuedAt, dateExpiration);
+            token = tokenRepository.findById(tokenValue).orElse(null);
+        } while (token != null);
+    
+        token = new Token(tokenValue, issuedAt, dateExpiration, user);
+        tokenRepository.save(token);
+    
+        return token;
     }
+    
 
      private String createToken(Map<String, Object> claims, Utilisateur user , Date issuedAt ,Date expiration) {
         return Jwts.builder()
