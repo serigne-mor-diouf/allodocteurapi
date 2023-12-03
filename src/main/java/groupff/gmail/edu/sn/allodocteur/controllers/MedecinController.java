@@ -34,7 +34,7 @@ public class MedecinController {
     private PatientService patientService ;
 
     @Autowired
-    private UtilisateurService   utilisateurService ;
+    private UtilisateurService utilisateurService ;
     
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping

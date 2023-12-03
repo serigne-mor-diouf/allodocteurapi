@@ -41,7 +41,6 @@ public class RendezVous  implements Serializable{
     }
     // getters, setters
 
-    
     public Long getId() {
         return id;
     }

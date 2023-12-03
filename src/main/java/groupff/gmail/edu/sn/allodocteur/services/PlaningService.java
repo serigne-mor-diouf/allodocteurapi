@@ -1,4 +1,6 @@
 package groupff.gmail.edu.sn.allodocteur.services;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,42 @@ public class PlaningService {
         return planingRepository.findAll();
     }
 
+    
+   // Vérifier la disponibilité pour un rendez-vous chez un medecin
+    public boolean disponibliliteRendez_vous(Long medecinId, Date date) {
+        // Rechercher le médecin par ID
+        Optional<Medecin> medecinOptional = medecinRepository.findById(medecinId);
+
+        if (medecinOptional.isPresent()) {
+            // Récupérer le médecin
+            Medecin medecin = medecinOptional.get();
+
+            // Rechercher le planning du médecin pour la date donnée
+            Optional<Planing> planingOptional = planingRepository.findByMedecinAndDate(medecin, date);
+
+            // Si le planning n'existe pas ou que le créneau est disponible, retourner vrai
+            return planingOptional.isPresent() && planingOptional.get().isdisponiblilite();
+        } else {
+            throw new RuntimeException("Médecin non trouvé pour l'ID : " + medecinId);
+        }
+    }
+
+    // Marquer un créneau comme non disponible
+    public void nondisponiblilite(Long planingId) {
+        Optional<Planing> planingOptional = planingRepository.findById(planingId);
+        if (planingOptional.isPresent()) {
+            Planing planing = planingOptional.get();
+            planing.nondisponiblilite();
+            planingRepository.save(planing);
+        } else {
+            throw new RuntimeException("Planing non trouvé pour l'ID : " + planingId);
+        }
+    }
+
     // definir son planing
     public Planing createPlaning(PlanningDTO planingDTO) {
         //rechercher un médecin par son ID
         Optional<Medecin> medecinOptional = medecinRepository.findById(planingDTO.getMedecin().getId());
-    
         if (medecinOptional.isPresent()) {
             //recuperer un médecin par son ID
             Medecin medecin = medecinOptional.get(); 
@@ -39,7 +72,6 @@ public class PlaningService {
         }
     }
     
-
     // Mettez à jour une plage horaire existante
     public Planing updatePlanning(Long id, PlanningDTO planningDTO) {
         // Vérifiez si le planning avec l'ID donné existe dans la base de données
@@ -54,8 +86,6 @@ public class PlaningService {
             throw new RuntimeException("Le planning avec le medecin" + id + " n'existe pas.");
         }
     }
-    
-
     
     // Supprimez une plage horaire du planning par ID
     public void deletePlage(Long id) {

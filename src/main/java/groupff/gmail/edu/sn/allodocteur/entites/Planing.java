@@ -17,7 +17,9 @@ public class Planing  implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
+
     private  Date date ;
+
     @Column(name = "disponibilite", columnDefinition = "int default 1")
     private int disponibilite;
 
@@ -25,20 +27,14 @@ public class Planing  implements Serializable{
     @JoinColumn(name = "medecin_id")
     private Medecin medecin ;
 
-    
-
     public Planing() {
         this.disponibilite = 1; // La disponibilité par défaut est 1
     }
-
- 
 
     public Planing(Date date, Medecin medecin) {
         this.date = date;
         this.medecin = medecin;
     }
-
-
 
     public Long getId() {
         return id;
@@ -99,7 +95,20 @@ public class Planing  implements Serializable{
         return true;
     }
 
-    
+     // Méthode pour vérifier si le créneau est disponible
+     public boolean isdisponiblilite() {
+        return disponibilite == 1;
+    }
+
+    // Méthode pour marquer la plage horraire comme non disponible
+    public void nondisponiblilite() {
+        this.disponibilite = 0;
+    }
+
+    // Méthode pour marquer la plage horraire comme disponible
+    public void disponible() {
+        this.disponibilite = 1;
+    }
 
     
 }

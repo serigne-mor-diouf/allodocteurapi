@@ -44,7 +44,6 @@ public class Patient  extends  Utilisateur{
     public Patient() {
     }
 
-
     public Patient(String nom, String prenom, String sexe, int age, String adresse, String telephone) {
         super(nom, prenom, sexe, age, adresse, telephone);
     }

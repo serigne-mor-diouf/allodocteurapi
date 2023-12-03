@@ -87,7 +87,7 @@ public class TokenService {
         Token token = null ;
         String tokenValue = null ;
         Date issuedAt = new Date(System.currentTimeMillis());
-        Date dateExpiration = new Date(issuedAt.getTime()+30*60*1000) ;//30min
+        Date dateExpiration = new Date(issuedAt.getTime()+30*60*1000) ;//30min en moyenne
         do{
            tokenValue = createToken(claims, user, issuedAt, dateExpiration);
            token = tokenRepository.findById(tokenValue).orElse(null) ;

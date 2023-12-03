@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,6 +84,7 @@ public class RendezvousController {
 
                 rendezVousExistante.setDate(rendezVousDTO.getDate());
                 rendezVousExistante.setMotif(rendezVousDTO.getMotif());
+                rendezVousExistante.setStatut(rendezVousDTO.getStatut()) ;
                 rendezVousExistante.setMedecin(rendezVousDTO.getMedecin());
 
                 RendezVous updatRendezVous = rendezvousRepository.save(rendezVousExistante);
@@ -93,6 +95,7 @@ public class RendezvousController {
         }
 }
     //delete a rv
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MEDECIN')")
     @DeleteMapping("/{id}")
     public void deleteRendezvous(@PathVariable Long id){
         rendezvousService.supprimerRendezVous(id);
@@ -107,6 +110,17 @@ public class RendezvousController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null); 
         } else {
             return ResponseEntity.ok(rendezVousConfirmer);
+        }
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MEDECIN')")
+    @PostMapping("/annuler/{id}")
+    public ResponseEntity<String> annulerRendezVous(@PathVariable Long id) {
+        try {
+            rendezvousService.annulerRendezVous(id);
+            return ResponseEntity.ok("Votre Rendez-vous a ete annulé avec succès.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     

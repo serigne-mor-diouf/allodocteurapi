@@ -1,7 +1,5 @@
 package groupff.gmail.edu.sn.allodocteur.services;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,8 +36,5 @@ public class AdminService {
     public void deleteMedecin(Long id) {
         medecinRepository.deleteById(id);
     }
-
-   
-
 
 }

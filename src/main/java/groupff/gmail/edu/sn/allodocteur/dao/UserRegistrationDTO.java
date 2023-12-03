@@ -2,7 +2,6 @@ package groupff.gmail.edu.sn.allodocteur.dao;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import groupff.gmail.edu.sn.allodocteur.AllodocteurHashPassword;
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import jakarta.persistence.Column;
 import jakarta.validation.Valid;

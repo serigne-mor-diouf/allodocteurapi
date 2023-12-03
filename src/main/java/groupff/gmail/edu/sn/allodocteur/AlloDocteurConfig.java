@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import groupff.gmail.edu.sn.allodocteur.entites.Admin;
 import groupff.gmail.edu.sn.allodocteur.repositories.AdminRepository;
-import jakarta.transaction.Transactional;
 
 @Component
 public class AlloDocteurConfig implements CommandLineRunner {

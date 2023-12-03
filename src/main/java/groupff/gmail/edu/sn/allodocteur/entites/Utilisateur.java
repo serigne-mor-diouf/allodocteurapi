@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED) // Utilisation de l'héritage "table par classe" (table per class)
@@ -13,19 +14,27 @@ public class  Utilisateur implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
+    
     private String nom ;
+
     private String prenom ;
+
     private String sexe ;
+
     private int age ;
+
     private String adresse ;
+
     private String telephone ;
    // private String profile ;
 
     @Column(nullable = false)
     private String password ;
 
+    @Email
     @Column(nullable = false , unique = true)
     private String email ;
+
     private boolean accountNonExpired ;
     private boolean accountNonLocked ;
     private boolean credentialsNonExpired ;
