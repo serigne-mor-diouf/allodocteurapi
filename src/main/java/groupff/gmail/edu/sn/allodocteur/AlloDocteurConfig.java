@@ -13,7 +13,6 @@ public class AlloDocteurConfig implements CommandLineRunner {
     @Autowired
     AdminRepository adminRepository;
 
-
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Demarrage de l'application");

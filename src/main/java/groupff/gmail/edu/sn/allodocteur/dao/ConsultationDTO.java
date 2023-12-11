@@ -20,15 +20,13 @@ public class ConsultationDTO {
     
     private String diagnostic ;
 
-    private Medecin medecin ;
-
-    private Patient patient ;
+    private Long idPatient ; 
 
     private Consultation consultation ;
 
-    private double poids;
+    private Double poids;
   
-    private double taille;
+    private Double taille;
 
     private String profession ;
  
@@ -80,19 +78,15 @@ public class ConsultationDTO {
     public void setDiagnostic(String diagnostic) {
         this.diagnostic = diagnostic;
     }
-    public Medecin getMedecin() {
-        return medecin;
+    
+    public void setTaille(Double taille) {
+        this.taille = taille;
     }
-    public void setMedecin(Medecin medecin) {
-        this.medecin = medecin;
-    }
-  
-
-    public double getPoids() {
+    public Double getPoids() {
         return poids;
     }
 
-    public void setPoids(double poids) {
+    public void setPoids(Double poids) {
         this.poids = poids;
     }
 
@@ -116,12 +110,20 @@ public class ConsultationDTO {
     public void setProfession(String profession) {
         this.profession = profession;
     }
-    public Patient getPatient() {
-        return patient;
+    public Long getIdPatient() {
+        return idPatient;
     }
-    public void setPatient(Patient patient) {
-        this.patient = patient;
+    public void setIdPatient(Long idPatient) {
+        this.idPatient = idPatient;
     }
+    @Override
+    public String toString() {
+        return "ConsultationDTO [id=" + id + ", motif=" + motif + ", antecedent=" + antecedent + ", allergie="
+                + allergie + ", date=" + date + ", groupeSanguin=" + groupeSanguin + ", diagnostic=" + diagnostic
+                + ", idPatient=" + idPatient + ", consultation=" + consultation + ", poids=" + poids + ", taille="
+                + taille + ", profession=" + profession + "]";
+    }
+   
 
     
 

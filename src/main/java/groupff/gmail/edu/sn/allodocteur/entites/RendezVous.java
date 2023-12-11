@@ -19,14 +19,10 @@ public class RendezVous  implements Serializable{
     private String statut;
 
     private String motif ;
-
-    // Relation avec le patient
   
     @ManyToOne
     @JoinColumn(name = "patient_id") // Crée une clé étrangère nommée "patient_id"
     private Patient patient ;
-
-    // Relation avec le médecin
    
     @ManyToOne
     @JoinColumn(name = "medecin_id")
@@ -54,7 +50,6 @@ public class RendezVous  implements Serializable{
         this.dateCreation = dateCreation ;
     }
 
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -66,7 +61,6 @@ public class RendezVous  implements Serializable{
     public void setDate(Date date) {
         this.date = date;
     }
-
 
     public String getStatut() {
         return statut;
@@ -109,14 +103,13 @@ public class RendezVous  implements Serializable{
          this.dateCreation = dateCreation;
      }
 
-     
+    
 
     @Override
     public String toString() {
-        return "RendezVous [id=" + id + ", date=" + date + ", statut=" + statut + ", motif=" + motif + ", patient="
-                + patient + ", medecin=" + medecin + ", dateCreation=" + dateCreation + "]";
+        return "RendezVous [id=" + id + ", date=" + date + ", statut=" + statut + ", motif=" + motif + ", dateCreation="
+                + dateCreation + "]";
     }
-
 
     @Override
     public int hashCode() {
@@ -125,7 +118,6 @@ public class RendezVous  implements Serializable{
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
-
 
     @Override
     public boolean equals(Object obj) {
@@ -144,5 +136,5 @@ public class RendezVous  implements Serializable{
         return true;
     }
 
-
+    
 }

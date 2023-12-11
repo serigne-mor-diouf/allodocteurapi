@@ -13,5 +13,4 @@ public interface MedecinRepository  extends JpaRepository<Medecin , Long> {
     List<Medecin> findByNomAndPrenom(String nom, String prenom);
     Optional<Medecin> findByEmail(String email);
 
-
 }

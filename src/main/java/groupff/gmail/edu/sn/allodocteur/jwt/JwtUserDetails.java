@@ -1,17 +1,22 @@
 package groupff.gmail.edu.sn.allodocteur.jwt;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
+import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
+
 @Component
 public class JwtUserDetails implements UserDetails {
     private String email;
     private String password;
-    private String profiles;
+    private Long userId; // Nouvel attribut pour stocker l'ID du médecin (ou du patient)
     private Collection<? extends GrantedAuthority> authorities;
 
     public JwtUserDetails() {
@@ -21,14 +26,6 @@ public class JwtUserDetails implements UserDetails {
         this.password = password;
     }
     
-    public String getProfiles() {
-        return profiles;
-    }
-
-    public void setProfiles(String profiles) {
-        this.profiles = profiles;
-    }
-
     @Override
     public boolean isAccountNonExpired() {
         
@@ -46,14 +43,33 @@ public class JwtUserDetails implements UserDetails {
     }
 
     public static JwtUserDetails build(Utilisateur user) {
-        JwtUserDetails userDetails = new JwtUserDetails();
-        userDetails.setEmail(user.getEmail());
-        userDetails.setPassword(user.getPassword());
-       // userDetails.setProfiles(compte.getProfile());  // Assuming getProfile() returns a String
+    JwtUserDetails userDetails = new JwtUserDetails();
+    userDetails.setUserId(user.getId()); // Définir l'ID de l'utilisateur (médecin ou patient)
+    userDetails.setEmail(user.getEmail());
+    userDetails.setPassword(user.getPassword());
+    userDetails.setAuthorities(user.getAuthorities().stream()
+            .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+            .collect(Collectors.toList()));
 
-        // Other fields...
+    if (user instanceof Medecin) {
+        userDetails.setUserId(((Medecin) user).getId());
+    }else if(user instanceof Patient){
+       userDetails.setUserId(((Patient) user).getId()); 
+    }
+    else{
+        System.out.println("instance not found");
+    }
 
-        return userDetails;
+
+    return userDetails;
+}
+
+
+    public Long getUserId() {
+        return userId;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {
@@ -82,6 +98,12 @@ public class JwtUserDetails implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
       
-        return true ;    }
+        return true ;    
+    }
+
+    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    } 
+
     
 }

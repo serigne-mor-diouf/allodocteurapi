@@ -24,7 +24,7 @@ public class PatientController {
     private PatientService patientService ;
 
     //si on enregistre un patient on lui donne son id avec responsEntity
-    @PreAuthorize("hasAnyAuthority('PATIENT', 'MEDECIN')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'MEDECIN' , 'ADMIN')")
     @PostMapping
     public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO) {       
             System.out.println("Enregistrement patientDto = " + patientDTO);
@@ -37,8 +37,9 @@ public class PatientController {
           }
         }
     
+        
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('PATIENT', 'MEDECIN')")
+    @PreAuthorize("hasAnyAuthority('PATIENT', 'MEDECIN', 'ADMIN')")
     public ResponseEntity<List<Patient>> getPatients(){
         List<Patient> patients =  patientService.getPatients();
             return ResponseEntity.ok(patients) ;

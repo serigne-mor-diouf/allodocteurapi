@@ -1,7 +1,5 @@
 package groupff.gmail.edu.sn.allodocteur.dao;
 import java.sql.Date;
-import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
-import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 public class PrescriptionDTO {
 
     private Long id ;
@@ -12,21 +10,13 @@ public class PrescriptionDTO {
 
     private String description  ;
     
-    private Patient patient ; 
-
-    private Medecin medecin  ; 
+    private Long idPatient ; 
 
     public PrescriptionDTO(){
 
     }
 
-    public PrescriptionDTO(Date date, String medicament, String description, Patient patient, Medecin medecin) {
-        this.date = date;
-        this.medicament = medicament;
-        this.description = description;
-        this.patient = patient;
-        this.medecin = medecin;
-    }
+
 
     public Long getId() {
         return id;
@@ -65,20 +55,12 @@ public class PrescriptionDTO {
         this.description = description;
     }
 
-    public Patient getPatient() {
-        return patient;
+    public Long getIdPatient() {
+        return idPatient;
     }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
-    public Medecin getMedecin() {
-        return medecin;
-    }
-
-    public void setMedecin(Medecin medecin) {
-        this.medecin = medecin;
+    public void setIdPatient(Long idPatient) {
+        this.idPatient = idPatient;
     }
 
 }

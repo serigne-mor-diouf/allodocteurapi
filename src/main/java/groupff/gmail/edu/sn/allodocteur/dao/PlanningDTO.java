@@ -1,6 +1,5 @@
 package groupff.gmail.edu.sn.allodocteur.dao;
 import java.util.Date;
-import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import jakarta.persistence.Column;
 
 public class PlanningDTO {
@@ -8,15 +7,8 @@ public class PlanningDTO {
     private  Date date ;
     @Column(name = "disponibilite", columnDefinition = "int default 1")
     private int disponibilite;
-    private Medecin medecin ;
+    private Long idMedecin ;
 
-
-    
-    public PlanningDTO(Date date, int disponibilite, Medecin medecin) {
-        this.date = date;
-        this.disponibilite = disponibilite;
-        this.medecin = medecin;
-    }
     
     public PlanningDTO() {
     }
@@ -39,12 +31,21 @@ public class PlanningDTO {
     public void setDisponibilite(int disponibilite) {
         this.disponibilite = disponibilite;
     }
-    public Medecin getMedecin() {
-        return medecin;
+
+    public Long getIdMedecin() {
+        return idMedecin;
     }
-    public void setMedecin(Medecin medecin) {
-        this.medecin = medecin;
+
+    public void setIdMedecin(Long idMedecin) {
+        this.idMedecin = idMedecin;
     }
+
+    @Override
+    public String toString() {
+        return "PlanningDTO [id=" + id + ", date=" + date + ", disponibilite=" + disponibilite + ", idMedecin="
+                + idMedecin + "]";
+    }
+    
 
     
 }

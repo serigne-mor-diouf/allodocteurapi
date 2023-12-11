@@ -42,10 +42,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             System.out.println("header Authorization");
             String tokenValue = authHeader.substring(7);
+            System.out.println("Token Value: " + tokenValue);
             if (tokenService.isTokenUtilisateurValide(tokenValue)) {
                 Token token = tokenService.findToken(tokenValue);
                 Utilisateur user = token.getUtilisateur();
-    
+                System.out.println("utilisateur connecté avec l'ID : " + user.getId());
                 // Vérifier si le compte de l'utilisateur est activé
                 if (!user.isEnabled()) {
                     throw new RuntimeException("Votre compte est désactivé. Veuillez contacter l'administrateur.");

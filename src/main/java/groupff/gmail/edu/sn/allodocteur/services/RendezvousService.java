@@ -1,18 +1,20 @@
 package groupff.gmail.edu.sn.allodocteur.services;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import groupff.gmail.edu.sn.allodocteur.dao.RendezvousDTO;
 import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 import groupff.gmail.edu.sn.allodocteur.entites.RendezVous;
+import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import groupff.gmail.edu.sn.allodocteur.repositories.MedecinRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.PatientRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.RendezvousRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class RendezvousService {
@@ -42,47 +44,17 @@ public class RendezvousService {
         return rendezvousRepository.findAll();
     }
 
+   
+   // Vérifier la disponibilité du médecin pour la date du rendez-vous
+   private boolean disponibilite(Long medecinId, Date date) {
+        return planingService.disponibilite(medecinId, date);
+    }
+
     // Compter les rendez-vous existants pour un médecin à une date donnée
-    private int countArendezvous(Long medecinId, Date date) {
+    private int nombreRendezVousParJour(Long medecinId, Date date) {
         return rendezvousRepository.countByMedecinIdAndDate(medecinId, date);
     }
 
-    // Planifier un rendez-vous
-     public RendezVous planifierRendezVous(RendezvousDTO rendezVousDTO) {
-        Optional<Medecin> medecinOptional = medecinRepository.findById(rendezVousDTO.getMedecin().getId());
-        Optional<Patient> patientOptional = patientRepository.findById(rendezVousDTO.getPatient().getId());
-
-        // Vérifions si le médecin et le patient existent
-        if (medecinOptional.isPresent() && patientOptional.isPresent()) {
-            Medecin medecin = medecinOptional.get();
-            Patient patient = patientOptional.get();
-
-            // Vérifier la disponibilité du planing pour le médecin
-            Date dateRendezVous = rendezVousDTO.getDate();
-            if (!planingService.disponibliliteRendez_vous(medecin.getId(), dateRendezVous)) {
-                throw new RuntimeException("votre date de rendez-vous n'est pas disponible pour le médecin pour la date : " + dateRendezVous);
-            }
-
-            // Vérifions le nombre maximum de rendez-vous pour cette date
-            int maxAppointments = 5; // Définir le nombre maximum de rendez-vous par date
-            if (countArendezvous(medecin.getId(), dateRendezVous) >= maxAppointments) {
-                throw new RuntimeException("Nombre maximal de rendez-vous atteint pour cette date : " + dateRendezVous);
-            }
-
-            // Créer le rendez-vous
-            RendezVous rendezVous = new RendezVous();
-            rendezVous.setMedecin(medecin);
-            rendezVous.setPatient(patient);
-            rendezVous.setMotif(rendezVousDTO.getMotif());
-            rendezVous.setDate(dateRendezVous);
-            rendezVous.setStatut(rendezVousDTO.getStatut());
-            rendezVous.setDateCreation(rendezVousDTO.getDateCreation());
-
-            return rendezvousRepository.save(rendezVous);
-        } else {
-            throw new RuntimeException("Médecin ou patient non trouvé pour les ID : " + rendezVousDTO.getMedecin().getId() + ", " + rendezVousDTO.getPatient().getId());
-        }
-    }
 
     // Supprimez le rendez-vous
     public void supprimerRendezVous(Long id) {
@@ -141,6 +113,80 @@ public class RendezvousService {
             throw new RuntimeException("Rendez-vous non trouvé pour l'ID : " + rendezVousId);
         }
     }  
+
+
+    public RendezVous ajouterRendezVous(RendezvousDTO rendezVousDTO , Utilisateur user) {
+          System.out.println("ajouterRendezVous");
+            System.out.println("rendezVous = "+ rendezVousDTO);
+            System.out.println("Utilisateur = "+ user);
+        Optional<Medecin> medecinOptional = medecinRepository.findById(user.getId());
+              System.out.println("medecin = " +medecinOptional.orElse(null));
+        Optional<Patient> patientOptional = patientRepository.findById(rendezVousDTO.getIdPatient());
+
+        System.out.println("patient = " +medecinOptional.orElse(null));
+           // verifier si le medecin existe et est present et le patient est present et existe 
+        if (medecinOptional.isPresent() && patientOptional.isPresent()) {
+          
+            Medecin medecin = medecinOptional.get();
+            Patient patient = patientOptional.get();
+            
+            RendezVous rendezVous = new RendezVous();
+            rendezVous.setMedecin(medecin);
+            rendezVous.setPatient(patient);
+            rendezVous.setMotif(rendezVousDTO.getMotif());
+            rendezVous.setDate(rendezVousDTO.getDate());
+            //rendezVous.setDateCreation(rendezVousDTO.getDateCreation());
+            System.out.println("rendezvous" + rendezvous );
+            System.out.println("patient ="+patient);
+            System.out.println("medecin ="+medecin);
+            return rendezvousRepository.save(rendezVous);
+        } else {
+            throw new EntityNotFoundException("medecin ou patient introuvale") ;
+        }
+    }
+
+    // prendre un rendez-vous
+    public RendezVous prendreRendezVous(RendezvousDTO rendezVousDTO, Utilisateur user) {
+        
+        Optional<Medecin> medecinOptional = medecinRepository.findById(rendezVousDTO.getIdPatient());
+              System.out.println("medecin = " +medecinOptional.orElse(null));
+        Optional<Patient> patientOptional = patientRepository.findById(user.getId());
+
+        System.out.println("patient = " +medecinOptional.orElse(null));
+           // verifier si le medecin existe et est present et le patient est present et existe 
+        if (medecinOptional.isPresent() && patientOptional.isPresent()) {
+          
+            Medecin medecin = medecinOptional.get();
+            Patient patient = patientOptional.get();
+            
+            // Vérifier la disponibilité du créneau pour le médecin
+        Date dateRendezVous = rendezVousDTO.getDate();
+            if (!disponibilite(medecin.getId(), dateRendezVous)) {
+                throw new RuntimeException("Créneau non disponible pour le médecin à la date : " + dateRendezVous);
+            }
+
+            // Vérifier le nombre maximum de rendez-vous pour cette date
+            int maxrendezVousParjour = 5; 
+            if (nombreRendezVousParJour(medecin.getId(), dateRendezVous) >= maxrendezVousParjour) {
+                throw new RuntimeException("Nombre maximal de rendez-vous atteint pour cette date : " + dateRendezVous);
+            }
+
+            // Créer le rendez-vous
+            RendezVous rendezVous = new RendezVous();
+            rendezVous.setMedecin(medecin);
+            rendezVous.setPatient(patient);
+            rendezVous.setMotif(rendezVousDTO.getMotif());
+            rendezVous.setDate(dateRendezVous);
+            rendezVous.setStatut(rendezVousDTO.getStatut());
+            rendezVous.setDateCreation(rendezVousDTO.getDateCreation());
+
+            return rendezvousRepository.save(rendezVous);
+        } else {
+            throw new EntityNotFoundException("entity not found");
+        }
+       
+    } 
+
 }
 
 

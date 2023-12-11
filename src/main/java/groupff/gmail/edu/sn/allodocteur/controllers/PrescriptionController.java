@@ -1,9 +1,14 @@
 package groupff.gmail.edu.sn.allodocteur.controllers;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import groupff.gmail.edu.sn.allodocteur.dao.PrescriptionDTO;
+import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
+import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 import groupff.gmail.edu.sn.allodocteur.entites.Prescription;
+import groupff.gmail.edu.sn.allodocteur.entites.RendezVous;
+import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
+import groupff.gmail.edu.sn.allodocteur.repositories.MedecinRepository;
+import groupff.gmail.edu.sn.allodocteur.repositories.PatientRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.PrescriptionRepository;
 import groupff.gmail.edu.sn.allodocteur.services.PrescriptionService;
 
@@ -23,11 +34,20 @@ public class PrescriptionController {
     
     @Autowired
     private PrescriptionService prescriptionService ;
+
     @Autowired
     private PrescriptionRepository prescriptionRepository ;
+
+    @Autowired
+    private MedecinRepository medecinRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
+
      @PostMapping
-    public ResponseEntity<String> createPrescription(@RequestBody PrescriptionDTO prescriptionDTO) {
-        prescriptionService.createPrescription(prescriptionDTO);
+    public ResponseEntity<String> createPrescription(@RequestBody PrescriptionDTO prescriptionDTO , 
+     @AuthenticationPrincipal  Utilisateur user) {
+        prescriptionService.createPrescription(prescriptionDTO , user);
         return ResponseEntity.ok("Prescription créée avec succès");
     }
 
@@ -63,13 +83,31 @@ public ResponseEntity<Prescription> modifierPrescription(@PathVariable Long id, 
         }
     }
 
-     @GetMapping
-    public ResponseEntity<List<Prescription>> getPrescription(){
-        List<Prescription> prescriptions = prescriptionService.getPrescription();
-        if(prescriptions!=null && !prescriptions.isEmpty()){
-            return ResponseEntity.ok(prescriptions) ;
-        }else{
-            return ResponseEntity.notFound().build() ;
+    @GetMapping
+    public List<Prescription> getPrescription(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        Optional<Medecin> optionalMedecin = medecinRepository.findByEmail(username);
+        Optional<Patient> optionalPatient = patientRepository.findByEmail(username);
+
+        if (optionalMedecin.isPresent()) {
+            Medecin medecin = optionalMedecin.get();
+            // Filtrer les prescriptions, rendez-vous et consultations effectués par le médecin
+            List<Prescription> prescriptions = medecin.getPrescriptions().stream()
+                    .filter(prescription -> prescription.getMedecin().equals(medecin))
+                    .collect(Collectors.toList());
+                    return prescriptions;
+
+            } else if (optionalPatient.isPresent()) {
+                Patient patient = optionalPatient.get();
+                List<Prescription> prescriptions = patient.getPrescriptions().stream()
+                    .filter(prescription -> prescription.getPatient().equals(patient))
+                    .collect(Collectors.toList());                                        
+                return prescriptions ;
+            }
+            else {
+            return prescriptionService.getPrescription() ;   
         }
     }
 

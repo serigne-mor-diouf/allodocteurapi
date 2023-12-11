@@ -2,10 +2,15 @@ package groupff.gmail.edu.sn.allodocteur.controllers;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import groupff.gmail.edu.sn.allodocteur.dao.ConsultationDTO;
 import groupff.gmail.edu.sn.allodocteur.entites.Consultation;
+import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
+import groupff.gmail.edu.sn.allodocteur.entites.Patient;
+import groupff.gmail.edu.sn.allodocteur.entites.Prescription;
+import groupff.gmail.edu.sn.allodocteur.entites.RendezVous;
+import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import groupff.gmail.edu.sn.allodocteur.repositories.ConsultationRepository;
+import groupff.gmail.edu.sn.allodocteur.repositories.MedecinRepository;
+import groupff.gmail.edu.sn.allodocteur.repositories.PatientRepository;
 import groupff.gmail.edu.sn.allodocteur.services.ConsultationService;
 
 @RestController
@@ -28,16 +40,50 @@ public class ConsultationController {
     
     @Autowired
     private ConsultationRepository consultationRepository ;
+
+      @Autowired
+    private MedecinRepository medecinRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+
     @GetMapping
     public List<Consultation> getConsultation(){
-        return consultationService.getConsultation();
-    }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        Optional<Medecin> optionalMedecin = medecinRepository.findByEmail(username);
+        Optional<Patient> optionalPatient = patientRepository.findByEmail(username);
+
+        if (optionalMedecin.isPresent()) {
+            Medecin medecin = optionalMedecin.get();
+            // Filtrer les prescriptions, rendez-vous et consultations effectués par le médecin
+            List<Consultation> consultations = medecin.getConsultations().stream()
+                    .filter(consultation -> consultation.getMedecin().equals(medecin))
+                    .collect(Collectors.toList());
+                        return consultations;
+
+            } else if (optionalPatient.isPresent()) {
+                Patient patient = optionalPatient.get();
+               List<Consultation> consultations = patient.getConsultations().stream()
+                    .filter(consultation -> consultation.getPatient().equals(patient))
+                    .collect(Collectors.toList());
+                                                        
+                return consultations ;
+
+            }
+            else {
+            return consultationService.getConsultation() ;   
+        }
+}
+
 
     //creer une consultation patien
     @PostMapping
     public ResponseEntity<?> createConsultation(
-        @RequestBody ConsultationDTO consultationDTO){
-        Consultation  consultation = consultationService.createConsultation(consultationDTO);
+        @RequestBody ConsultationDTO consultationDTO , @AuthenticationPrincipal  Utilisateur user){
+        Consultation  consultation = consultationService.createConsultation(consultationDTO , user);
         if (consultation != null) {
             return ResponseEntity.ok("consulatation créée avec succès");
             

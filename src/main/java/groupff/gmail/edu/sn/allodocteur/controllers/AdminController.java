@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import groupff.gmail.edu.sn.allodocteur.entites.Patient;
@@ -56,8 +57,8 @@ public class AdminController {
 
 
     // Endpoint pour modifier un médecin
-    @PutMapping("/editMedecin")
-    public ResponseEntity<String> editMedecin(@RequestBody Medecin medecin) {
+    @PutMapping("/{editMedecin}")
+    public ResponseEntity<String> editMedecin(@PathVariable Medecin medecin) {
         try {
             adminService.editMedecin(medecin);
             return ResponseEntity.ok("Médecin modifié avec succès.");
@@ -73,13 +74,13 @@ public class AdminController {
         return ResponseEntity.ok("Médecin supprimé avec succès.");
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping("/verrouiller/{utilisateurId}")
     public ResponseEntity<?> verrouillerUtilisateur(@PathVariable Long utilisateurId) {
         utilisateurService.verrouillerUtilisateur(utilisateurId);
         return ResponseEntity.ok("Utilisateur verrouillé avec succès.");
     }
-
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping("/deverrouiller/{utilisateurId}")
     public ResponseEntity<?> deverrouillerUtilisateur(@PathVariable Long utilisateurId) {
         utilisateurService.deverrouillerUtilisateur(utilisateurId);

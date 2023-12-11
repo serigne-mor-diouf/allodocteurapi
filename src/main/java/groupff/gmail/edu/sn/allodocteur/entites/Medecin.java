@@ -2,18 +2,19 @@ package groupff.gmail.edu.sn.allodocteur.entites;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-@JsonPropertyOrder
 @Entity
 @Table(name = "medecin")
-public class Medecin extends  Utilisateur {
+public class Medecin extends  Utilisateur implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
     private String specialite ;
 
     @JsonIgnore
@@ -36,10 +37,6 @@ public class Medecin extends  Utilisateur {
     }
 
 
-    public Medecin(String nom, String prenom, String sexe, int age, String adresse, String telephone) {
-        super(nom, prenom, sexe, age, adresse, telephone);
-    }
-
 
     public String getSpecialite() {
         return specialite;
@@ -57,7 +54,6 @@ public class Medecin extends  Utilisateur {
         this.rendezVous = rendezVous;
     }
 
-
     public List<Prescription> getPrescriptions() {
         return prescriptions;
     }
@@ -74,8 +70,6 @@ public class Medecin extends  Utilisateur {
         this.planings = planings;
     }
 
-
-
     public List<Consultation> getConsultations() {
         return consultations;
     }
@@ -84,11 +78,22 @@ public class Medecin extends  Utilisateur {
         this.consultations = consultations;
     }
 
-
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
        return List.of(new SimpleGrantedAuthority("MEDECIN"));
         //return List.of(new SimpleGrantedAuthority("MEDECIN") , new SimpleGrantedAuthority("USER"));
     }
+
+
+    public Long getId() {
+        return id;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
 }

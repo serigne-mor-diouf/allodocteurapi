@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,18 +19,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import groupff.gmail.edu.sn.allodocteur.dao.AuthenticationDTO;
 import groupff.gmail.edu.sn.allodocteur.dao.AuthenticationResponse;
+import groupff.gmail.edu.sn.allodocteur.dao.PatientDTO;
+import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 import groupff.gmail.edu.sn.allodocteur.entites.Token;
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import groupff.gmail.edu.sn.allodocteur.jwt.UserDetailsServiceImpl;
+import groupff.gmail.edu.sn.allodocteur.services.ConnectedUserService;
+import groupff.gmail.edu.sn.allodocteur.services.PatientService;
 import groupff.gmail.edu.sn.allodocteur.services.TokenService;
 import groupff.gmail.edu.sn.allodocteur.services.UtilisateurService;
+import groupff.gmail.edu.sn.allodocteur.util.JwtUtil;
 
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationController {
 
     @Autowired
-    private groupff.gmail.edu.sn.allodocteur.util.JwtUtil jwtUtil;
+    private JwtUtil jwtUtil;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -42,6 +48,12 @@ public class AuthenticationController {
 
     @Autowired
     private TokenService tokenService ;
+
+    @Autowired
+    private PatientService patientService ;
+
+     @Autowired
+    private ConnectedUserService connectedUserService; 
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationDTO authenticationDTO) throws BadCredentialsException, DisabledException, UsernameNotFoundException, IOException {
@@ -60,9 +72,6 @@ public class AuthenticationController {
         }
 
         // Récupérez le profil de l'utilisateur
-        // String profile = user.getProfile();
-
-        // Générez le token en utilisant le profil
         final String token = tokenService.generateToken(user).getValeur();
         System.out.println("token = "+token);
         // return new AuthenticationResponse(jwt);
@@ -81,6 +90,22 @@ public class AuthenticationController {
         }
         else{
             return ResponseEntity.notFound().build();
+        }
+    }
+
+  
+
+    //si on enregistre un patient on lui donne son id avec responsEntity
+    @PostMapping("/inscriptionPatient")
+    public ResponseEntity<?> savePatient(@RequestBody PatientDTO patientDTO) {
+
+        // Appelez la méthode inscriptionPatient avec l'ID du médecin
+        Patient patient = patientService.inscriptionPatient(patientDTO);
+
+        if (patient != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(patient.getId());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

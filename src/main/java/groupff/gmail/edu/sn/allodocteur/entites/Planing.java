@@ -96,17 +96,17 @@ public class Planing  implements Serializable{
     }
 
      // Méthode pour vérifier si le créneau est disponible
-     public boolean isdisponiblilite() {
+     public boolean disponibilite() {
         return disponibilite == 1;
     }
 
-    // Méthode pour marquer la plage horraire comme non disponible
-    public void nondisponiblilite() {
+    // Méthode pour marquer le créneau comme non disponible
+    public void nomDisponibilite() {
         this.disponibilite = 0;
     }
 
-    // Méthode pour marquer la plage horraire comme disponible
-    public void disponible() {
+    // Méthode pour marquer le créneau comme disponible
+    public void markSlotAvailable() {
         this.disponibilite = 1;
     }
 

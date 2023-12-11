@@ -3,6 +3,9 @@ import java.util.Collection;
 import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,11 +19,6 @@ public class Admin  extends  Utilisateur{
         
     }
 
-    public Admin(String nom, String prenom, String sexe, int age, String adresse, String telephone, Long id) {
-        super(nom, prenom, sexe, age, adresse, telephone);
-        this.id = id;
-    }
-
     @Override
     public Long getId() {
         return id;
@@ -31,10 +29,10 @@ public class Admin  extends  Utilisateur{
         this.id = id;
     }
    
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
        return List.of(new SimpleGrantedAuthority("ADMIN"));
         //return List.of(new SimpleGrantedAuthority("MEDECIN") , new SimpleGrantedAuthority("USER"));
     }
-
 }

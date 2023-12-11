@@ -114,7 +114,7 @@ public class UserRegistrationDTO {
 //
     public void updateData(Utilisateur utilisateur){
         //cripter le mot de passe  en base 64
-     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(this.getPassword());
         utilisateur.setNom(this.getNom());
         utilisateur.setPrenom(this.getPrenom());
@@ -122,7 +122,6 @@ public class UserRegistrationDTO {
         utilisateur.setAge(this.getAge());
         utilisateur.setAdresse(this.getAdresse());
         utilisateur.setTelephone(this.getTelephone());
-        //utilisateur.setProfil(this.getProfil());
         utilisateur.setEmail(this.getEmail());
         utilisateur.setPassword(hashedPassword);
     }

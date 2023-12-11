@@ -16,14 +16,16 @@ public class PatientService {
     private PatientRepository patientRepository;
 
     @Autowired
+    private ConnectedUserService connectedUserService;
+
+    @Autowired
     private MedecinRepository medecinRepository ;
     //enregistrer le profil patient par defaut
     // @Value("${profile1}")
     // private String profil;
 
 
-    public Patient inscriptionPatient(PatientDTO patientDTO) {
-        
+    public Patient inscriptionPatient(PatientDTO patientDTO) {   
         Patient patient = patientDTO.toPatient();
          //patient.setProfil(profil) ;
         patientRepository.save(patient);

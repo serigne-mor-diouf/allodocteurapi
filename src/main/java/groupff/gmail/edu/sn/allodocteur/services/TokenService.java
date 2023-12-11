@@ -92,6 +92,8 @@ public class TokenService {
                 .collect(Collectors.toList());
     
         claims.put(AUTHORITIES_CLAIM_KEY, authorities);
+        claims.put("userId", user.getId());  // Ajouter l'ID de l'utilisateur aux claims
+    
         Token token = null;
         String tokenValue = null;
         Date issuedAt = new Date(System.currentTimeMillis());
@@ -107,6 +109,7 @@ public class TokenService {
     
         return token;
     }
+    
     
 
      private String createToken(Map<String, Object> claims, Utilisateur user , Date issuedAt ,Date expiration) {

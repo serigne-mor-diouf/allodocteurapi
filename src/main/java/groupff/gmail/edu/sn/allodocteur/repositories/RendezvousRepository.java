@@ -19,9 +19,11 @@ public interface RendezvousRepository extends JpaRepository<RendezVous , Long> {
     List<RendezVous> findByMedecinId(Long medecinId);
     List<RendezVous> findByDateBetween(LocalDateTime start, LocalDateTime end);
 
-    
     // Compter les rendez-vous par médecin et date
     @Query("SELECT COUNT(r) FROM RendezVous r WHERE r.medecin.id = :medecin_id AND r.date = :date")
     int countByMedecinIdAndDate(@Param("medecin_id") Long medecin_id, @Param("date") Date date);
+
+    List<RendezVous> findByPatientId(Long patientId);
+
 
 }

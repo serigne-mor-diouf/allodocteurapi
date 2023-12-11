@@ -38,10 +38,10 @@ public class Consultation {
     private String diagnostic ;
 
     @Column(name = "poids")
-    private double poids;
+    private Double poids;
     
     @Column(name = "taille")
-    private double taille;
+    private Double taille;
 
     private String  profession  ;
 
@@ -53,7 +53,7 @@ public class Consultation {
     
 
     public Consultation(Medecin medecin, Patient patient, String motif, String antecedent, String allergie, Date date,
-            String groupeSanguin, String diagnostic, double poids, double taille, String profession) {
+            String groupeSanguin, String diagnostic, Double poids, Double taille, String profession) {
         this.medecin = medecin;
         this.patient = patient;
         this.motif = motif;
@@ -66,19 +66,6 @@ public class Consultation {
         this.taille = taille;
         this.profession = profession;
     }
-
-
-
-
-    public double getPoids() {
-        return poids;
-    }
-
-    public void setPoids(double poids) {
-        this.poids = poids;
-    }
-
-   
 
 
     public String getProfession() {
@@ -125,11 +112,11 @@ public class Consultation {
 
 
 
-    public double getTaille() {
+    public Double getTaille() {
         return taille;
     }
 
-    public void setTaille(double taille) {
+    public void setTaille(Double taille) {
         this.taille = taille;
     }
 
@@ -179,6 +166,15 @@ public class Consultation {
 
     public void setDiagnostic(String diagnostic) {
         this.diagnostic = diagnostic;
+    }
+
+
+public void setPoids(Double poids) {
+    this.poids = poids;
+}
+
+    public Double getPoids() {
+        return poids;
     }
 
 }

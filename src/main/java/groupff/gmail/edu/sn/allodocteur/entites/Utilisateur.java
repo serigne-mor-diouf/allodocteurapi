@@ -1,20 +1,22 @@
 package groupff.gmail.edu.sn.allodocteur.entites;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED) // Utilisation de l'héritage "table par classe" (table per class)
 public class  Utilisateur implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
-    
+
     private String nom ;
 
     private String prenom ;
@@ -56,11 +58,10 @@ public class  Utilisateur implements UserDetails {
         this.age = age;
         this.adresse = adresse;
         this.telephone = telephone;
-       
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -140,6 +141,7 @@ public class  Utilisateur implements UserDetails {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
        return new ArrayList<>() ;
@@ -218,5 +220,6 @@ public class  Utilisateur implements UserDetails {
                 + ", credentialsNonExpired=" + credentialsNonExpired + ", enabled=" + enabled 
                 + "]";
     }
+
     
 }

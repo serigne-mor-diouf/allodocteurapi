@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 import groupff.gmail.edu.sn.allodocteur.dao.PlanningDTO;
 import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import groupff.gmail.edu.sn.allodocteur.entites.Planing;
+import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import groupff.gmail.edu.sn.allodocteur.repositories.MedecinRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.PlaningRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class PlaningService {
@@ -24,42 +26,29 @@ public class PlaningService {
         return planingRepository.findAll();
     }
 
-    
-   // Vérifier la disponibilité pour un rendez-vous chez un medecin
-    public boolean disponibliliteRendez_vous(Long medecinId, Date date) {
-        // Rechercher le médecin par ID
-        Optional<Medecin> medecinOptional = medecinRepository.findById(medecinId);
+   // Vérifier la disponibilité pour un rendez-vous
+   public boolean disponibilite(Long medecinId, Date date) {
+    // Rechercher le médecin par ID
+    Optional<Medecin> medecinOptional = medecinRepository.findById(medecinId);
 
-        if (medecinOptional.isPresent()) {
-            // Récupérer le médecin
-            Medecin medecin = medecinOptional.get();
+    if (medecinOptional.isPresent()) {
+        // Récupérer le médecin
+        Medecin medecin = medecinOptional.get();
 
-            // Rechercher le planning du médecin pour la date donnée
-            Optional<Planing> planingOptional = planingRepository.findByMedecinAndDate(medecin, date);
+        // Rechercher le planning du médecin pour la date donnée
+        Optional<Planing> planingOptional = planingRepository.findByMedecinAndDate(medecin, date);
 
-            // Si le planning n'existe pas ou que le créneau est disponible, retourner vrai
-            return planingOptional.isPresent() && planingOptional.get().isdisponiblilite();
-        } else {
-            throw new RuntimeException("Médecin non trouvé pour l'ID : " + medecinId);
-        }
+        // Si le planning n'existe pas ou que le créneau est disponible, retourner vrai
+        return planingOptional.isEmpty() || planingOptional.get().disponibilite();
+    } else {
+        throw new RuntimeException("Médecin non trouvé pour l'ID : " + medecinId);
     }
-
-    // Marquer un créneau comme non disponible
-    public void nondisponiblilite(Long planingId) {
-        Optional<Planing> planingOptional = planingRepository.findById(planingId);
-        if (planingOptional.isPresent()) {
-            Planing planing = planingOptional.get();
-            planing.nondisponiblilite();
-            planingRepository.save(planing);
-        } else {
-            throw new RuntimeException("Planing non trouvé pour l'ID : " + planingId);
-        }
-    }
+}
 
     // definir son planing
-    public Planing createPlaning(PlanningDTO planingDTO) {
+    public Planing createPlaning(PlanningDTO planingDTO , Utilisateur user) {
         //rechercher un médecin par son ID
-        Optional<Medecin> medecinOptional = medecinRepository.findById(planingDTO.getMedecin().getId());
+        Optional<Medecin> medecinOptional = medecinRepository.findById(user.getId());
         if (medecinOptional.isPresent()) {
             //recuperer un médecin par son ID
             Medecin medecin = medecinOptional.get(); 
@@ -68,7 +57,7 @@ public class PlaningService {
             planing.setDate(planingDTO.getDate());   
             return planingRepository.save(planing);
         } else {
-            throw new RuntimeException("Médecin non trouvé pour l'ID : " + (planingDTO.getMedecin().getId()));
+            throw new EntityNotFoundException("medecin introuvale") ;
         }
     }
     

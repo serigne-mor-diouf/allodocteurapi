@@ -10,9 +10,11 @@ import groupff.gmail.edu.sn.allodocteur.dao.ConsultationDTO;
 import groupff.gmail.edu.sn.allodocteur.entites.Consultation;
 import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import groupff.gmail.edu.sn.allodocteur.entites.Patient;
+import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import groupff.gmail.edu.sn.allodocteur.repositories.ConsultationRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.MedecinRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.PatientRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ConsultationService {
@@ -30,34 +32,44 @@ public class ConsultationService {
     }
 
 
-    //passer une consultation a un pateint
-    public Consultation createConsultation(ConsultationDTO consultationDTO){
-        Optional<Medecin> medecinOptional = medecinRepository.findById((consultationDTO.getMedecin().getId())) ;        
-        Optional<Patient> patientOptional = patientRepository.findById(consultationDTO.getPatient().getId());
-        if(medecinOptional.isPresent() && patientOptional.isPresent()){
+    public Consultation createConsultation(ConsultationDTO consultationDTO, Utilisateur user) {
+        // Récupération du Medecin à partir du DTO
+        Optional<Medecin> medecinOptional = medecinRepository.findById(user.getId());
+        System.out.println("medecin = " +medecinOptional.orElse(null));
+        Optional<Patient> patientOptional = patientRepository.findById(consultationDTO.getIdPatient());
+
+        System.out.println("patient = " +medecinOptional.orElse(null));
+            // verifier si le medecin existe et est present et le patient est present et existe 
+        if (medecinOptional.isPresent() && patientOptional.isPresent()) {
+    
+            // Si les deux sont présents, on peut créer la consultation
             Medecin medecin = medecinOptional.get();
             Patient patient = patientOptional.get();
-
+    
+            // Création de la consultation
             Consultation consultation = new Consultation();
             consultation.setMedecin(medecin);
             consultation.setPatient(patient);
             consultation.setAllergie(consultationDTO.getAllergie());
             consultation.setMotif(consultationDTO.getMotif());
             consultation.setAntecedent(consultationDTO.getAntecedent());
-            consultation.setDate(consultationDTO.getDate()) ;
+            consultation.setDate(consultationDTO.getDate());
             consultation.setDiagnostic(consultationDTO.getDiagnostic());
-            consultation.setPoids(consultationDTO.getPoids()) ;
-            consultation.setTaille(consultationDTO.getTaille()) ;
-            consultation.setGroupeSanguin(consultationDTO.getGroupeSanguin()) ;
+            consultation.setPoids(consultationDTO.getPoids());
+            consultation.setTaille(consultationDTO.getTaille());
+            consultation.setGroupeSanguin(consultationDTO.getGroupeSanguin());
             consultation.setProfession(consultationDTO.getProfession());
-            // Enregistrez la consultation
+    
+            // Enregistrement de la consultation
             consultationRepository.save(consultation);
-
-        return consultation;
-       } else {
-        throw new RuntimeException("Médecin ou patient non trouvé pour les ID : " + consultationDTO.getMedecin().getId() + ", " + consultationDTO.getPatient().getId());
-      }
+    
+            return consultation;
+        } else {
+            // Si le Medecin ou le Patient n'a pas été trouvé
+            throw new EntityNotFoundException("entite introuvale");
+        }
     }
+    
 
     public Consultation modifierConsultation(Long consultationId, ConsultationDTO consultationDTO) {
         // Récupération de l'objet Consultation à partir de l'ID

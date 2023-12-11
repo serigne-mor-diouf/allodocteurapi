@@ -1,5 +1,6 @@
 package groupff.gmail.edu.sn.allodocteur.entites;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,10 +18,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 @Entity
 @Table(name = "patient")
-public class Patient  extends  Utilisateur{
+public class Patient  extends  Utilisateur implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
     @JsonIgnore
@@ -90,7 +90,7 @@ public class Patient  extends  Utilisateur{
         this.consultations = consultations;
     }
 
-  
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
        return List.of(new SimpleGrantedAuthority("PATIENT"));
