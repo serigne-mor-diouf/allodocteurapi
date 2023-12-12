@@ -24,18 +24,16 @@ import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 import groupff.gmail.edu.sn.allodocteur.entites.Token;
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import groupff.gmail.edu.sn.allodocteur.jwt.UserDetailsServiceImpl;
-import groupff.gmail.edu.sn.allodocteur.services.ConnectedUserService;
 import groupff.gmail.edu.sn.allodocteur.services.PatientService;
 import groupff.gmail.edu.sn.allodocteur.services.TokenService;
 import groupff.gmail.edu.sn.allodocteur.services.UtilisateurService;
-import groupff.gmail.edu.sn.allodocteur.util.JwtUtil;
 
 @RequestMapping("/auth")
 @RestController
 public class AuthenticationController {
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    // @Autowired
+    // private JwtUtil jwtUtil;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -52,9 +50,7 @@ public class AuthenticationController {
     @Autowired
     private PatientService patientService ;
 
-     @Autowired
-    private ConnectedUserService connectedUserService; 
-
+    
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationDTO authenticationDTO) throws BadCredentialsException, DisabledException, UsernameNotFoundException, IOException {
         try {

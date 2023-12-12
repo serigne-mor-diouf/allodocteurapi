@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import groupff.gmail.edu.sn.allodocteur.filters.JwtRequestFilter;
 
 @Configuration
@@ -26,16 +25,16 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests()
-                .requestMatchers("/auth/**").permitAll()
-                .and()
-                .authorizeHttpRequests().requestMatchers("/api/**")
-                .authenticated().and()
-                .sessionManagement(management -> management
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-       }
+            .authorizeHttpRequests()
+            .requestMatchers("/auth/**").permitAll()
+            .and()
+            .authorizeHttpRequests().requestMatchers("/api/**")
+            .authenticated().and()
+            .sessionManagement(management -> management
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

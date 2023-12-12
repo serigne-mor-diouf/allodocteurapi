@@ -16,9 +16,6 @@ public class PatientService {
     private PatientRepository patientRepository;
 
     @Autowired
-    private ConnectedUserService connectedUserService;
-
-    @Autowired
     private MedecinRepository medecinRepository ;
     //enregistrer le profil patient par defaut
     // @Value("${profile1}")

@@ -2,8 +2,6 @@ package groupff.gmail.edu.sn.allodocteur.dao;
 import java.util.Date;
 
 import groupff.gmail.edu.sn.allodocteur.entites.Consultation;
-import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
-import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 
 public class ConsultationDTO {
     private Long id ;

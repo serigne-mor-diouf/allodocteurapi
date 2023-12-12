@@ -14,7 +14,6 @@ import groupff.gmail.edu.sn.allodocteur.entites.Token;
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import groupff.gmail.edu.sn.allodocteur.repositories.TokenRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.UtilisateurRepository;
-import groupff.gmail.edu.sn.allodocteur.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -32,8 +31,8 @@ public class TokenService {
     @Autowired
     private TokenRepository tokenRepository ;
 
-    @Autowired
-    private JwtUtil jwtUtil ;
+    // @Autowired
+    // private JwtUtil jwtUtil ;
 
     @Autowired
     private UtilisateurRepository utilisateurRepository ;

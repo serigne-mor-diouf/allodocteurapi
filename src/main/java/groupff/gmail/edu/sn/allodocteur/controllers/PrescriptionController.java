@@ -21,7 +21,6 @@ import groupff.gmail.edu.sn.allodocteur.dao.PrescriptionDTO;
 import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 import groupff.gmail.edu.sn.allodocteur.entites.Prescription;
-import groupff.gmail.edu.sn.allodocteur.entites.RendezVous;
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import groupff.gmail.edu.sn.allodocteur.repositories.MedecinRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.PatientRepository;

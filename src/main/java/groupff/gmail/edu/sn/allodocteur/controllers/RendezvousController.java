@@ -1,6 +1,5 @@
 package groupff.gmail.edu.sn.allodocteur.controllers;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -11,7 +10,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -115,18 +113,20 @@ public class RendezvousController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MEDECIN' , 'PATIENT')")
     @PostMapping("/prendreRv")
-    public ResponseEntity<?> prendreRendezVous(@RequestBody RendezvousDTO rendezvousDTO ,
-    @AuthenticationPrincipal Utilisateur user) 
+    public ResponseEntity<RendezVous> prendreRendezVous(
+        @RequestBody RendezvousDTO rendezvousDTO ,
+        @AuthenticationPrincipal Utilisateur user) 
        {
+        System.out.println(" prendre RendezVous userDetails = " +user);
         RendezVous rendezVous = rendezvousService.prendreRendezVous(rendezvousDTO , user);
     
         if (rendezVous != null) {
-            return ResponseEntity.ok("rendez-vous a ete recue avec succès");
+           return ResponseEntity.status(HttpStatus.CREATED).body(rendezVous);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
-    
+
     
     // Mettre à jour un rendezvous patient
     @PutMapping("/{id}")
