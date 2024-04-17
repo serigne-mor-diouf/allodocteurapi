@@ -16,6 +16,7 @@ import groupff.gmail.edu.sn.allodocteur.filters.JwtRequestFilter;
 
 @Configuration
 @EnableWebSecurity
+//il  ya  des methodes qui ont ete  prix par la securite 
 @EnableMethodSecurity
 public class WebSecurityConfiguration {
 

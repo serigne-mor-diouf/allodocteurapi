@@ -9,13 +9,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import groupff.gmail.edu.sn.allodocteur.entites.Token;
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
-import groupff.gmail.edu.sn.allodocteur.jwt.UserDetailsServiceImpl;
 import groupff.gmail.edu.sn.allodocteur.services.TokenService;
-import groupff.gmail.edu.sn.allodocteur.services.UtilisateurService;
-import groupff.gmail.edu.sn.allodocteur.util.JwtUtil;
+
 
 import java.io.IOException;
 
@@ -23,14 +20,14 @@ import java.io.IOException;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+   // @Autowired
+    //private UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private  UtilisateurService utilisateurService ; 
+    // @Autowired
+    // private  UtilisateurService utilisateurService ; 
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    // @Autowired
+    // private JwtUtil jwtUtil;
 
     @Autowired
     private TokenService  tokenService ;
@@ -59,9 +56,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } else {
                 System.out.println("Token invalide");
             }
-        }
-    
+        }    
         filterChain.doFilter(request, response);
-    }
-    
+    }  
 }

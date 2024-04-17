@@ -1,5 +1,6 @@
 package groupff.gmail.edu.sn.allodocteur.services;
 import java.security.Key;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import groupff.gmail.edu.sn.allodocteur.entites.Token;
@@ -19,7 +21,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+//programmer pour supprimer les token revoquer pour chaque minute
+@Transactional
 @Service
 public class TokenService {
 
@@ -72,6 +79,7 @@ public class TokenService {
                 .parseClaimsJws(token)
                 .getBody();
     }
+    
 
       private Key getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
@@ -109,8 +117,6 @@ public class TokenService {
         return token;
     }
     
-    
-
      private String createToken(Map<String, Object> claims, Utilisateur user , Date issuedAt ,Date expiration) {
         return Jwts.builder()
                 .setClaims(claims)
@@ -124,4 +130,10 @@ public class TokenService {
         tokenRepository.save(token);
     }
 
+    //programmer pour suprimmmer les token revoquer par 1 minute
+    @Scheduled(cron = "0 */1 * * * *")
+    public void removeUserJwt(){
+        log.info("supresssion des tokens a {}" , Instant.now()) ;
+        this.tokenRepository.deleteAllByrevoquer(true);
+    }
 }

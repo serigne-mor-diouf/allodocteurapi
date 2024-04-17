@@ -1,6 +1,7 @@
 package groupff.gmail.edu.sn.allodocteur.entites;
 import java.util.Date;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -25,8 +26,8 @@ public class Token {
    private Date validite ;
 
    private Date deconnection  ; 
-
-    @ManyToOne
+ 
+    @ManyToOne(cascade = {CascadeType.DETACH , CascadeType.MERGE})
     @JoinColumn(name = "utilisateur_id", nullable = false)
     private Utilisateur utilisateur ;
 

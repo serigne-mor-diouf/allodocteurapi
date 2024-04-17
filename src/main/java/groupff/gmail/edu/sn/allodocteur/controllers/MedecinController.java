@@ -40,7 +40,7 @@ public class MedecinController {
     @PostMapping
     public ResponseEntity<?> saveMedecin(@RequestBody MedecinDTO medecinDTO){
         System.out.println("enregistrement MdecinDto = "+medecinDTO);
-        Utilisateur  medecin = medecinService.inscriptionMedecin(medecinDTO);
+        Utilisateur medecin = medecinService.inscriptionMedecin(medecinDTO);
            // enregistre un patient en recuperant la requette atendue ici 200
             if (medecin != null) {
                  return ResponseEntity.status(HttpStatus.CREATED).body(medecin.getId()) ;
@@ -51,7 +51,7 @@ public class MedecinController {
         }
     }
 
-    // lister medecin
+    //lister medecin
     @GetMapping
     public ResponseEntity<List<Medecin>> getMedecins() {
         List<Medecin> medecins = patientService.getMedecins();

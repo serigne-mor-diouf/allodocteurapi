@@ -11,5 +11,5 @@ import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 
 public interface ConsultationRepository  extends JpaRepository<Consultation, Long>{
         Optional<List<Consultation>> findAllByMedecinAndPatient(Medecin medecin, Patient patient);
-         List<Consultation> findByMedecinId(Long medecinId);
+        List<Consultation> findByMedecinId(Long medecinId);
 }

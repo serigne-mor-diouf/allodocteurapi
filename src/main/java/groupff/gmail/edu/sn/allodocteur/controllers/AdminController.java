@@ -1,13 +1,14 @@
 package groupff.gmail.edu.sn.allodocteur.controllers;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import groupff.gmail.edu.sn.allodocteur.dao.AdminDTO;
 import groupff.gmail.edu.sn.allodocteur.entites.Medecin;
 import groupff.gmail.edu.sn.allodocteur.entites.Patient;
+import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import groupff.gmail.edu.sn.allodocteur.services.AdminService;
 import groupff.gmail.edu.sn.allodocteur.services.PatientService;
 import groupff.gmail.edu.sn.allodocteur.services.UtilisateurService;
@@ -16,21 +17,28 @@ import groupff.gmail.edu.sn.allodocteur.services.UtilisateurService;
 @RequestMapping("/api/admin")
 public class AdminController {
 
-    @Autowired
+    @Autowired    
     private AdminService adminService;
 
     @Autowired
     private PatientService patientService ;
 
-     @Autowired
+    @Autowired
     private UtilisateurService utilisateurService;
 
     // Endpoint pour sauvegarder un nouvel admin
-    // @PostMapping("/saveAdmin")
-    // public ResponseEntity<Admin> saveAdmin(@RequestBody AdminDTO adminDTO) {
-    //     Admin savedAdmin = adminService.saveAdmin(adminDTO);
-    //     return ResponseEntity.ok(savedAdmin);
-    // }
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PostMapping
+    public ResponseEntity<?> saveAdmin(@RequestBody AdminDTO adminDTO) {
+        System.out.println("Enregistrement de l'administrateur = " + adminDTO);
+        Utilisateur admin = adminService.saveAdmin(adminDTO);
+        if (admin != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(admin);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
 
     @GetMapping("/listeMedecin")
     public ResponseEntity<List<Medecin>> getMedecins() {
@@ -53,8 +61,6 @@ public class AdminController {
             return ResponseEntity.notFound().build() ;
         }
     }
-
-
 
     // Endpoint pour modifier un médecin
     @PutMapping("/{editMedecin}")

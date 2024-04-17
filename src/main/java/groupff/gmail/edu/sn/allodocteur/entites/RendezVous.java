@@ -12,7 +12,8 @@ public class RendezVous  implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @Temporal(TemporalType.DATE)
     private Date date;
     
     @Column(name = "statut", columnDefinition = "VARCHAR(255) DEFAULT 'confirmer'")

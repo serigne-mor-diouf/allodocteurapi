@@ -100,7 +100,7 @@ public class RendezvousController {
     public ResponseEntity<RendezVous> creaRendezVous(
         @RequestBody RendezvousDTO rendezvousDTO ,
         @AuthenticationPrincipal  Utilisateur user ){
-            System.out.println("creaRendezVous userDetails = " +user);
+            System.out.println("creaRendezVous userDetails = "+user);
         
         RendezVous rendezVous = rendezvousService.ajouterRendezVous(rendezvousDTO , user);
     

@@ -65,7 +65,7 @@ public Prescription createPrescription(PrescriptionDTO prescriptionDTO , Utilisa
                
             }    
         else {
-            throw new RuntimeException("Consultation non trouvée pour l'ID : " + id);
+            throw new RuntimeException("prescription non trouvée pour l'ID : " + id);
         }
         }
 

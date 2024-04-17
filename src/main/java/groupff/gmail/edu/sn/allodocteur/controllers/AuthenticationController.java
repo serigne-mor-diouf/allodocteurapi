@@ -23,7 +23,6 @@ import groupff.gmail.edu.sn.allodocteur.dao.PatientDTO;
 import groupff.gmail.edu.sn.allodocteur.entites.Patient;
 import groupff.gmail.edu.sn.allodocteur.entites.Token;
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
-import groupff.gmail.edu.sn.allodocteur.jwt.UserDetailsServiceImpl;
 import groupff.gmail.edu.sn.allodocteur.services.PatientService;
 import groupff.gmail.edu.sn.allodocteur.services.TokenService;
 import groupff.gmail.edu.sn.allodocteur.services.UtilisateurService;
@@ -39,9 +38,6 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
     private  UtilisateurService utilisateurService ; 
 
     @Autowired
@@ -54,7 +50,9 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationDTO authenticationDTO) throws BadCredentialsException, DisabledException, UsernameNotFoundException, IOException {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationDTO.getEmail(), authenticationDTO.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                authenticationDTO.getEmail(),
+             authenticationDTO.getPassword()));
             System.out.println("Connection réussie");
         } catch (BadCredentialsException e) {
             System.out.println("Connection échouée - Incorrect username or password");
@@ -64,7 +62,7 @@ public class AuthenticationController {
         // Récupérez le compte de l'utilisateur
         Utilisateur user = utilisateurService.findByEmail(authenticationDTO.getEmail());
         if (user == null) {
-            throw new UsernameNotFoundException("User not found", null);
+            throw new UsernameNotFoundException("Utilisateur not found", null);
         }
 
         // Récupérez le profil de l'utilisateur

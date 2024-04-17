@@ -1,5 +1,7 @@
 package groupff.gmail.edu.sn.allodocteur.dao;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
@@ -8,7 +10,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 @Valid
 public class UserRegistrationDTO {
-    
 
     @NotNull
     private String nom ;
@@ -16,7 +17,7 @@ public class UserRegistrationDTO {
     @Size(min = 5, max = 50)
     private String prenom;
 
-    @Pattern(regexp = "[a-zA-Z]+")
+    @jakarta.validation.constraints.Pattern(regexp = "[a-zA-Z]+")
     private String sexe;
 
 
@@ -36,7 +37,7 @@ public class UserRegistrationDTO {
     
     @NotEmpty
     @Size(min = 5, message = "Le mot de passe doit comporter au moins 5 caractères")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre")
+    @jakarta.validation.constraints.Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre")
     private String password;
 
     @Column(name = "satut", columnDefinition = "int default 1")  
@@ -112,20 +113,29 @@ public class UserRegistrationDTO {
         this.password = password;
     }
 //
-    public void updateData(Utilisateur utilisateur){
-        //cripter le mot de passe  en base 64
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String hashedPassword = passwordEncoder.encode(this.getPassword());
-        utilisateur.setNom(this.getNom());
-        utilisateur.setPrenom(this.getPrenom());
-        utilisateur.setSexe(this.getSexe());
-        utilisateur.setAge(this.getAge());
-        utilisateur.setAdresse(this.getAdresse());
-        utilisateur.setTelephone(this.getTelephone());
-        utilisateur.setEmail(this.getEmail());
-        utilisateur.setPassword(hashedPassword);
+public void updateData(Utilisateur utilisateur) {
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    String hashedPassword = passwordEncoder.encode(this.getPassword());
+    utilisateur.setNom(this.getNom());
+    utilisateur.setPrenom(this.getPrenom());
+    utilisateur.setSexe(this.getSexe());
+    utilisateur.setAge(this.getAge());
+    utilisateur.setAdresse(this.getAdresse());
+    utilisateur.setTelephone(this.getTelephone());
+
+    // Validation de l'e-mail
+    String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}$";
+    Pattern pattern = Pattern.compile(emailRegex);
+    Matcher matcher = pattern.matcher(this.getEmail());
+
+    if (!matcher.matches() || this.getEmail().contains(",")) {
+        throw new RuntimeException("Adresse e-mail non valide");
     }
-    
+
+    utilisateur.setEmail(this.getEmail());
+    utilisateur.setPassword(hashedPassword);
+}
+
     @Override
     public String toString() {
         return " nom=" + nom + ", prenom=" + prenom + ", sexe=" + sexe + ", age=" + age

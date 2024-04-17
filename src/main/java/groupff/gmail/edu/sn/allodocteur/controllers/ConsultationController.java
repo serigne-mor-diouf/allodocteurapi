@@ -79,7 +79,7 @@ public class ConsultationController {
 }
 
 
-    //creer une consultation patien
+    //creer une consultation patient
     @PostMapping
     public ResponseEntity<?> createConsultation(
         @RequestBody ConsultationDTO consultationDTO , @AuthenticationPrincipal  Utilisateur user){

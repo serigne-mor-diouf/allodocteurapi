@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @Table(name = "planing")
@@ -18,6 +20,7 @@ public class Planing  implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
 
+    @Temporal(TemporalType.DATE)
     private  Date date ;
 
     @Column(name = "disponibilite", columnDefinition = "int default 1")
@@ -76,8 +79,6 @@ public class Planing  implements Serializable{
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
-
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -95,20 +96,21 @@ public class Planing  implements Serializable{
         return true;
     }
 
-     // Méthode pour vérifier si le créneau est disponible
-     public boolean isSlotAvailable() {
-        return disponibilite == 1;
+       // Méthode pour vérifier si le créneau est disponible
+       public boolean disponibilite() {
+        return disponibilite == 1 ;
     }
 
     // Méthode pour marquer le créneau comme non disponible
-    public void markSlotUnavailable() {
+    public void nomDisponible() {
         this.disponibilite = 0;
     }
 
     // Méthode pour marquer le créneau comme disponible
-    public void markSlotAvailable() {
+    public void commeDisponible() {
         this.disponibilite = 1;
     }
 
     
+
 }

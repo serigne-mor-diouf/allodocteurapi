@@ -27,7 +27,7 @@ public class Medecin extends  Utilisateur implements Serializable {
     
     @JsonIgnore
     @OneToMany(mappedBy = "medecin")
-     private List<Prescription> prescriptions;
+    private List<Prescription> prescriptions;
 
     @JsonIgnore
     @OneToMany(mappedBy = "medecin" , cascade = CascadeType.ALL)
@@ -36,7 +36,14 @@ public class Medecin extends  Utilisateur implements Serializable {
     public Medecin() {
     }
 
-
+    public Medecin(String specialite, List<RendezVous> rendezVous, List<Consultation> consultations,
+            List<Prescription> prescriptions, List<Planing> planings) {
+        this.specialite = specialite;
+        this.rendezVous = rendezVous;
+        this.consultations = consultations;
+        this.prescriptions = prescriptions;
+        this.planings = planings;
+    }
 
     public String getSpecialite() {
         return specialite;

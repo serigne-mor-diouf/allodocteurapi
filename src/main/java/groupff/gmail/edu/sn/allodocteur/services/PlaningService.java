@@ -1,5 +1,4 @@
 package groupff.gmail.edu.sn.allodocteur.services;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class PlaningService {
     }
 
    // Vérifier la disponibilité pour un rendez-vous
-   public boolean isSlotAvailable(Long medecinId, Date date) {
+   public boolean disponibilite(Long medecinId, Date date) {
     // Rechercher le médecin par ID
     Optional<Medecin> medecinOptional = medecinRepository.findById(medecinId);
 
@@ -39,7 +38,7 @@ public class PlaningService {
         Optional<Planing> planingOptional = planingRepository.findByMedecinAndDate(medecin, date);
 
         // Si le planning n'existe pas ou que le créneau est disponible, retourner vrai
-        return planingOptional.isEmpty() || planingOptional.get().isSlotAvailable();
+        return planingOptional.isEmpty() || planingOptional.get().disponibilite();
     } else {
         throw new RuntimeException("Médecin non trouvé pour l'ID : " + medecinId);
     }
@@ -76,7 +75,7 @@ public class PlaningService {
         }
     }
     
-    // Supprimez une plage horaire du planning par ID
+    //Supprimez une plage horaire du planning par ID
     public void deletePlage(Long id) {
         // si existe dans la base de données
         if (planingRepository.existsById(id)) {

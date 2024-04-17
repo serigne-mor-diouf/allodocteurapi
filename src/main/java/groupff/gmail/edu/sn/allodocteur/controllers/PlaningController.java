@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,7 +35,8 @@ public class PlaningController {
     @Autowired
     private MedecinRepository medecinRepository;
 
-    @PreAuthorize("hasAuthority('MEDECIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MEDECIN' , 'PATIENT')")
+    // @Secured("hasRole('USER')")
     @GetMapping
     public List<Planing> getPlanings() {
          Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

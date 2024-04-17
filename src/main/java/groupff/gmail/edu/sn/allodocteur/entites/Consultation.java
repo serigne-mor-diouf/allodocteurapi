@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 @Entity
 @Table(name = "consultation")
 public class Consultation {
@@ -24,13 +26,13 @@ public class Consultation {
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
-   
     private String motif ;
 
     private String antecedent ;
     
     private String allergie ; 
 
+    @Temporal(TemporalType.DATE)
     private Date date ;
 
     private String groupeSanguin ;

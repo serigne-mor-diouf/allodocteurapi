@@ -22,10 +22,10 @@ public class ConsultationService {
     private ConsultationRepository consultationRepository ;
 
     @Autowired
-      private MedecinRepository medecinRepository ;
+    private MedecinRepository medecinRepository ;
 
-      @Autowired
-      private PatientRepository patientRepository ;
+    @Autowired
+    private PatientRepository patientRepository ;
 
     public List<Consultation> getConsultation() {
         return consultationRepository.findAll();
@@ -38,7 +38,7 @@ public class ConsultationService {
         System.out.println("medecin = " +medecinOptional.orElse(null));
         Optional<Patient> patientOptional = patientRepository.findById(consultationDTO.getIdPatient());
 
-        System.out.println("patient = " +medecinOptional.orElse(null));
+         System.out.println("patient = " +medecinOptional.orElse(null));
             // verifier si le medecin existe et est present et le patient est present et existe 
         if (medecinOptional.isPresent() && patientOptional.isPresent()) {
     
@@ -77,7 +77,6 @@ public class ConsultationService {
 
         if (consultationOptional.isPresent()) {
             Consultation consultationExistante = consultationOptional.get();
-
             // Mise à Jour des Attributs
             consultationExistante.setAllergie(consultationDTO.getAllergie());
             consultationExistante.setMotif(consultationDTO.getMotif());

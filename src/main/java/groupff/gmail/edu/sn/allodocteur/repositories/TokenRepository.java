@@ -7,4 +7,6 @@ import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 
 public interface TokenRepository  extends JpaRepository<Token , String>{
     Token findByUtilisateur(Utilisateur utilisateur) ;
+
+    void deleteAllByrevoquer(boolean revoquer);
 }

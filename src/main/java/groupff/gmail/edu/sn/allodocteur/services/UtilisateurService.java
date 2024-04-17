@@ -15,6 +15,7 @@ import groupff.gmail.edu.sn.allodocteur.entites.Utilisateur;
 import groupff.gmail.edu.sn.allodocteur.repositories.MedecinRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.PatientRepository;
 import groupff.gmail.edu.sn.allodocteur.repositories.UtilisateurRepository;
+import lombok.AllArgsConstructor;
 
 
 @Service
@@ -50,28 +51,28 @@ public class UtilisateurService {
     patientsAndMedecins.addAll(medecins);
 
     return patientsAndMedecins;
-}
-
-
-public void verrouillerUtilisateur(Long utilisateurId) {
-    mettreAJourStatutUtilisateur(utilisateurId, false);
-}
-
-public void deverrouillerUtilisateur(Long utilisateurId) {
-    mettreAJourStatutUtilisateur(utilisateurId, true);
-}
-
-private void mettreAJourStatutUtilisateur(Long utilisateurId, boolean enabled) {
-    Optional<Utilisateur> utilisateurOptional = utilisateurRepository.findById(utilisateurId);
-
-    if (utilisateurOptional.isPresent()) {
-        Utilisateur utilisateur = utilisateurOptional.get();
-        utilisateur.setEnabled(enabled);
-        utilisateurRepository.save(utilisateur);
-    } else {
-        throw new RuntimeException("Utilisateur non trouvé pour l'ID : " + utilisateurId);
     }
-}
+
+
+    public void verrouillerUtilisateur(Long utilisateurId) {
+        mettreAJourStatutUtilisateur(utilisateurId, false);
+    }
+
+    public void deverrouillerUtilisateur(Long utilisateurId) {
+        mettreAJourStatutUtilisateur(utilisateurId, true);
+    }
+
+    private void mettreAJourStatutUtilisateur(Long utilisateurId, boolean enabled) {
+        Optional<Utilisateur> utilisateurOptional = utilisateurRepository.findById(utilisateurId);
+
+        if (utilisateurOptional.isPresent()) {
+            Utilisateur utilisateur = utilisateurOptional.get();
+            utilisateur.setEnabled(enabled);
+            utilisateurRepository.save(utilisateur);
+        } else {
+            throw new RuntimeException("Utilisateur non trouvé pour l'ID : " + utilisateurId);
+        }
+    }
 
 }
 
